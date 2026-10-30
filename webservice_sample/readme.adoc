@@ -1,0 +1,137 @@
+= webservice_sample
+
+This sample application is designed to test request webservice.
+
+=== Requirements
+
+* Hanwha Vision Open Platform 26.12.01 or higher
+
+=== I.  Overview
+* Purpose: Custom webservice endpoints provide a flexible way to register and handle custom HTTP endpoints on the device.
+
+=== II. Architecture
+This sample application demonstrates how OpenSDK enables external HTTP requests to be integrated into an application through a component-based, event-driven architecture. It shows not only how endpoints are registered but also how they are used, processed, and responded to.
+When the application starts, custom HTTP endpoints are registered with OpenSDK. The purposes are:
+
+* Allow the device to receive HTTP requests from external clients (e.g., SIRA BigPictureRequest).
+
+* Forward incoming requests to the application through the AppDispatcher for event-driven processing.
+
+* Enable the application to execute business logic and generate responses (e.g., SOAP/XML with base64-encoded image data).
+
+* Support custom authentication, including unauthenticated access for endpoints like SIRA (CustomSetting(true, netsvc::IHttpdService::AuthMethod::kNone)).
+
+=== III. Implementation steps
+. Setting up CustomSetting() for authentication configuration
++
+[source,xml]
+----
+attach->CustomSetting(true, netsvc::IHttpdService::AuthMethod::kNone);
+----
++
+. Registering custom URIs (outside the default /opensdk/<AppID>/ path)
++
+[source,xml]
+----
+ const uri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/ANPRClientService/BigPictureRequest.svc`;
+----
++
+[source,xml]
+----
+auto* attach = new ("OpenAPIRegistrar") IAppDispatcher::OpenAPIRegistrar(String("/ANPRClientService/BigPictureRequest.svc"), GetInstanceName(), "POST");
+SendNoReplyEvent("AppDispatcher", (int32_t)IAppDispatcher::EEventType::eRegisterCommand, 0, attach);
+----
++
+. Handling HTTP requests and generating responses
++
+Handle HTTP request event: 
+[source,xml]
+----
+case (int32_t)IAppDispatcher::EEventType::eHttpRequest: {
+  result = ParseHttpEvent(event);
+  break;
+}
+----
+ParseHttpEvent: 
+[source,xml]
+----
+bool WebServiceComponent::ParseHttpEvent(Event* event) {
+  if (event->IsReply()) {
+    return true;
+  }
+
+  auto oas = static_cast<OpenAppSerializable*>(event->GetBaseObjectArgument());
+  auto path_info = oas->GetFCGXParam("PATH_INFO");
+  // Check if the client is calling the BigPictureRequest service endpoint
+  if (path_info == "/ANPRClientService/BigPictureRequest.svc") { 
+    if (oas->GetMethod() == "POST") {
+      oas->SetStatusCode(200); //request OK
+      oas->SetResponseBody(requestHttpService()); //requestHttpService() return xml body response
+      oas->AddResponseHeader("Content-type", "text/xml; charset=utf-8"); //Add the HTTP Content-Type header to the response that the server returns to the client.
+      return true;
+    }
+    oas->SetStatusCode(400); //error
+    oas->SetResponseBody("requested path is not supported");
+    return false;
+  }
+}
+----
+
++
+. Lifecycle considerations (when to register endpoints)
+* To obtain the AppID, join the AppInfo group as follows in AppDispatcher_manifest_instance_0.json:
++
+[source,xml]
+----
+{  
+  "Source": 2009002,  
+  "GroupName": "AppInfo"  
+}
+----
+
+
+
+=== IV. Testing
+
+[arabic]
+. Open the camera’s web viewer, go to [Settings]>[Open Platform], and click [Start] to start the application.
+. Click [Go App] in the camera web viewer.
+. Click [Send Event WebService]
+== Result
+- **When clicking [Send Event Webservice] in the UI:**
+  * The application sends an HTTP POST request to the API: `/ANPRClientService/BigPictureRequest.svc`.
+  * If the request is successful (**HTTP 200 OK**), the XML response is displayed on the UI next to the button.
+- **Or use in terminal:**
+  curl -X POST "http://<device_ip>/ANPRClientService/BigPictureRequest.svc"
+
+- **Notes:**
+  * `<device_ip>`: IP address of the device on which the application is running.
+
+- **Expected response if the request succeeds (HTTP 200 OK):**
+  The camera returns a valid XML message. 
+  . Example:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cit="http://www.cityringclientservice.ae">
+  <soapenv:Body>
+    <cit:GetBigPictureResponse>
+      <cit:SiteId>3742</cit:SiteId>
+      <cit:AccountId>2889</cit:AccountId>
+      <cit:TransactionId>1004346</cit:TransactionId>
+      <cit:Base64String>/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgc</cit:Base64String>
+    </cit:GetBigPictureResponse>
+  </soapenv:Body>
+</soapenv:Envelope>
+----
+=== V. Building Application
+
+[arabic]
+. Build application.
++
+....
+$ APP_NAME=webservice_sample SDK_VER=26.01.12(your SDK version) SOC=wn9 docker compose up
+$ docker compose down --remove-orphans
+....
+. Check the build results in current directory. If successful, you will be able to find the cap file.

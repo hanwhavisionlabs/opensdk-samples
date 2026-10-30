@@ -1,0 +1,10 @@
+*.cap
+build
+build.*
+models
+build_all.sh
+*/app/bin
+*/app/libs
+*/config/build_info.json
+*/app/res/ai_bin
+*/readme.pdf

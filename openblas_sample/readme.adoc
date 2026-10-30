@@ -1,0 +1,49 @@
+== openblas_sample
+
+This sample application is designed how to cross compile OpenBLAS library and use it.
+
+=== Prerequisites
+
+* Hanwha Vision Open Platform 23.00.00 or higher
+
+=== Scenario
+
+* Preconditions
+[arabic]
+. Open the camera web viewer, go to [Setup]>[Open Platform], and click
+[Install] to install the application.
+. Click [Start] to start the application.
+* Test
+[arabic]
+. In the [Open Platform] menu of the web viewer, click [Go App].
+. Create a matrix by setting the numbers in [row] and [col] and clicking the [Create] button.
+. Click [Send] on the application web page.
+
+=== Result
+
+* The result of multiplying Matrix 1 and Matrix 2 is sent from the application, and the calculated matrix is displayed under the [Send] button.
+
+=== Building Application
+
+[arabic]
+
+. Prepare OpenBLAS source code from repo
++
+....
+$ cd /path/to/openblas_sample/app
+$ mkdir external
+$ cd external
+$ git clone https://github.com/OpenMathLib/OpenBLAS.git
+....
+
+. Build application.
++
+....
+$ APP_NAME=openblas_sample SDK_VER=26.10.26(your SDK version) SOC=wn9_v100(your SoC) docker compose up
+$ docker compose down --remove-orphans
+....
+. Check the build results in current directory. If successful, you will be able to find the cap file.
++
+. To rebuild OpenBLAS from a clean state, add `CLEAN_OPENBLAS=ON` to the `docker compose up` command.
++
+. For OpenBLAS cross-compilation troubleshooting, please refer to the corresponding library documentation.

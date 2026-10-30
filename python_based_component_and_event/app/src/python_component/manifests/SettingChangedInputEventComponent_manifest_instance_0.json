@@ -1,0 +1,29 @@
+{
+  "LibraryFileName": "libpy_component_module.so",
+  "Instance": {
+    "InstanceName": "SettingChangedInputEventComponent",
+    "SchedulerName": "EComponents::eScheduler1",
+    "ReceiverNames": [
+      "OpenPlatform",
+      "AppDispatcher"
+    ],
+    "SourceNames": [
+      {
+        "Source": "OpenPlatform",
+        "GroupName": "AppMessage"
+      },
+      {
+        "Source": "OpenPlatform",
+        "GroupName": "SettingChange"
+      }
+    ],
+    "Channel": 0,
+    "ModelPath": "../res/models/",
+    "SettingPath": "../storage/settings/"
+  },
+  "Additional": {
+    "PythonComponent": {
+      "Module": "SettingChangedInputEventComponent"
+    }
+  }
+}

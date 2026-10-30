@@ -1,0 +1,17 @@
+{
+	"LibraryFileName" : "libapp_dispatcher_model.so",
+	"Instance": {
+		"InstanceName": "AppDispatcher",
+		"SchedulerName": "eScheduler1",
+		"ReceiverNames": [
+			"Stub::Dispatcher::OpenAPI",
+			"Classification"
+		],
+		"SourceNames": [
+			{"Source": "Stub::Dispatcher::OpenAPI", "GroupName": "OpenSDK::run_neural_network::Dispatcher"}
+		],
+		"Channel": "0",
+		"ModelPath" : "../res/models/",
+		"SettingPath" : "../mnt/setting/"
+	}
+}

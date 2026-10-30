@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Event Trigger</title>
+</head>
+
+<body>
+  <h1>Event Trigger</h1>
+  <h2>OneShot</h2>
+  <input type='checkbox' id='one_shot_rule_enable' name='one_shot_rule_enable' value='enable' />Rule Enable
+  <p>Register OneShot Rule Instance</p>
+  <form>
+    <button type="button" onclick="RegisterOneshotInstance()">Send</button>
+    <div id="response1"></div>
+  </form>
+  <p>Add OneShot Dynamic Rule</p>
+  <form>
+    <pre>Rule Name      SampleOneShot
+<span id="oneshot_dynamic_rule_index_wrapper" style="display:none">Rule Index     <select id="oneshot_dynamic_rule_index"><option value="1">1</option><option value="2">2</option></select></span>
+Event Action   <select id="oneshot_dynamic_rule_action"><option value="Record">Record</option><option value="FTP">FTP</option><option value="SMTP">SMTP</option></select></pre>
+    <button type="button" onclick="AddOneShotDynamicRule()">Send</button>
+    <div id="response_dynamic_rule"></div>
+    <pre id="dynamic_rule_params"></pre>
+  </form>
+  <p>Trigger One Shot</p>
+  <form>
+    <pre id="one_shot_rule_index_wrapper" style="display:none">Rule Index      <select id="one_shot_rule_index"> <option value="1">1</option><option value="2">2</option></select> : Set the rule index to trigger.</pre>
+    <button type="button" onclick="TriggerOneShot()">Send</button>
+    <div id="response2"></div>
+  </form>
+  <p>Unregister OneShot Instance</p>
+  <form>
+    <button type="button" onclick="UnregisterOneShotInstance()">Send</button>
+    <div id="response3"></div>
+  </form>
+  <h2>Property</h2>
+  <input type='checkbox' id='property_rule_enable' name='property_rule_enable' value='enable' />Rule Enable
+  <p>Register Property Rule Instance</p>
+  <form>
+    <button type="button" onclick="RegisterPropertyInstance()">Send</button>
+    <div id="response4"></div>
+  </form>
+  <p>Add Property Dynamic Rule</p>
+  <form>
+    <pre>Rule Name      SampleProperty
+<span id="property_dynamic_rule_index_wrapper" style="display:none">Rule Index     <select id="property_dynamic_rule_index"><option value="1">1</option><option value="2">2</option></select></span>
+State           <select id="property_dynamic_rule_state"><option value="Start">Start</option><option value="End">End</option></select>
+Event Action    <select id="property_dynamic_rule_action"><option value="Record">Record</option><option value="FTP">FTP</option><option value="SMTP">SMTP</option></select></pre>
+    <button type="button" onclick="AddPropertyDynamicRule()">Send</button>
+    <div id="response_dynamic_property_rule"></div>
+    <pre id="dynamic_property_rule_params"></pre>
+  </form>
+  <p>Trigger Property</p>
+  <form>
+    <pre>State            <select id="state"> <option value="Start">Start</option><option value="End">End</option></select></pre>
+    <pre id="property_rule_index_wrapper" style="display:none">Rule Index      <select id="property_rule_index"> <option value="1">1</option><option value="2">2</option></select> : Set the rule index to trigger.</pre>
+    <button type="button" onclick="TriggerProperty()">Send</button>
+    <div id="response5"></div>
+  </form>
+  <p>Unregister Property Instance</p>
+  <form>
+    <button type="button" onclick="UnregisterPropertyInstance()">Send</button>
+    <div id="response6"></div>
+  </form>
+
+  <script>
+    const paths = window.location.pathname.split('/');
+    const app_id = paths[5];
+
+    const uri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/opensdk/${app_id}/configuration`;
+    const one_shot_rule_name = 'SampleOneShot';
+    const property_rule_name = 'SampleProperty';
+    let one_shot_instance_registered = false;
+    let property_instance_registered = false;
+    let one_shot_dynamic_rule_registered = false;
+    let property_dynamic_rule_registered = false;
+
+    function validateInput(input) {
+      var value = parseInt(input.value);
+      var min = parseInt(input.min);
+      var max = parseInt(input.max);
+
+      if (value < min || value > max) {
+        alert("Input value is out of range. Please enter a value["+ value +"] between " + min + " and " + max + ".");
+        input.value = 0;
+      }
+    }
+
+    document.getElementById('one_shot_rule_enable').addEventListener('change', (e) => {
+      document.getElementById('one_shot_rule_index_wrapper').style.display = e.target.checked ? '' : 'none';
+      document.getElementById('oneshot_dynamic_rule_index_wrapper').style.display = e.target.checked ? '' : 'none';
+    });
+
+    document.getElementById('property_rule_enable').addEventListener('change', (e) => {
+      document.getElementById('property_rule_index_wrapper').style.display = e.target.checked ? '' : 'none';
+      document.getElementById('property_dynamic_rule_index_wrapper').style.display = e.target.checked ? '' : 'none';
+    });
+
+    const RegisterOneshotInstance = (callback) => {
+      const req = {
+        mode: 'register_oneshot_instance',
+        enable: document.getElementById('one_shot_rule_enable').checked
+      }
+      const res = document.getElementById('response1');
+      sendData(uri, 'POST', req, res, (success) => {
+        if (success) {
+          one_shot_instance_registered = true;
+        }
+        if (callback) {
+          callback(success);
+        }
+      });
+    }
+
+    const AddOneShotDynamicRule = () => {
+      const res = document.getElementById('response_dynamic_rule');
+      if (one_shot_dynamic_rule_registered) {
+        res.textContent = 'already registered';
+        return;
+      }
+
+      const ruleName = one_shot_rule_name;
+      const ruleEnabled = document.getElementById('one_shot_rule_enable').checked;
+      const ruleIndex = parseInt(document.getElementById('oneshot_dynamic_rule_index').value);
+      const action = document.getElementById('oneshot_dynamic_rule_action').value;
+
+      const addDynamicRule = () => {
+        const params = new URLSearchParams({
+          msubmenu: 'dynamicrules',
+          action: 'add',
+          RuleName: ruleName,
+          ScheduleName: 'Always',
+          Enable: 'True',
+          Duration: '60',
+          'EventSource.0.Type': 'AppEvent',
+          'EventSource.0.AppName': app_id,
+          'EventSource.0.AppEventType': 'SampleOneShotMotion',
+          'EventSource.0.Channel': '0',
+          'EventAction.0.Type': action
+        });
+        params.set('EventSource.0.RuleIndexType', ruleEnabled ? 'Specific' : 'Any');
+        if (ruleEnabled) {
+          params.set('EventSource.0.RuleIndex', ruleIndex.toString());
+        }
+        document.getElementById('dynamic_rule_params').textContent = params.toString();
+
+        sendData(`${window.location.protocol}//${window.location.host}/stw-cgi/eventrules.cgi?${params.toString()}`, 'GET', {}, res, (success) => {
+          if (success) {
+            one_shot_dynamic_rule_registered = true;
+          }
+        });
+      };
+
+      if (one_shot_instance_registered) {
+        addDynamicRule();
+        return;
+      }
+
+      document.getElementById('one_shot_rule_enable').checked = true;
+      res.textContent = 'Registering OneShot instance...';
+      RegisterOneshotInstance((success) => {
+        if (success) {
+          addDynamicRule();
+        } else {
+          res.textContent = 'Fail: OneShot instance registration failed';
+        }
+      });
+    }
+
+    const TriggerOneShot = () => {
+      const req = {
+        mode: 'trigger_one_shot',
+        rule_index: parseInt(document.getElementById("one_shot_rule_index").value)
+      }
+      const res = document.getElementById('response2');
+      sendData(uri, 'POST', req, res);
+    }
+
+    const UnregisterOneShotInstance = () => {
+      const req = {
+        mode: 'unregister_oneshot_instance'
+      }
+      const res = document.getElementById('response3');
+      RemoveDynamicRule(one_shot_rule_name, res, (success) => {
+        if (success) {
+          one_shot_dynamic_rule_registered = false;
+        }
+        sendData(uri, 'POST', req, res, (success) => {
+          if (success) {
+            one_shot_instance_registered = false;
+          }
+        });
+      });
+    }
+
+    const RegisterPropertyInstance = (callback) => {
+      const req = {
+        mode: 'register_property_instance',
+        enable: document.getElementById('property_rule_enable').checked
+      }
+      const res = document.getElementById('response4');
+      sendData(uri, 'POST', req, res, (success) => {
+        if (success) {
+          property_instance_registered = true;
+        }
+        if (callback) {
+          callback(success);
+        }
+      });
+    }
+
+    const AddPropertyDynamicRule = () => {
+      const res = document.getElementById('response_dynamic_property_rule');
+      if (property_dynamic_rule_registered) {
+        res.textContent = 'already registered';
+        return;
+      }
+
+      const ruleName = property_rule_name;
+      const ruleEnabled = document.getElementById('property_rule_enable').checked;
+      const ruleIndex = parseInt(document.getElementById('property_dynamic_rule_index').value);
+      const state = document.getElementById('property_dynamic_rule_state').value === 'Start';
+      const action = document.getElementById('property_dynamic_rule_action').value;
+
+      const addDynamicRule = () => {
+        const params = new URLSearchParams({
+          msubmenu: 'dynamicrules',
+          action: 'add',
+          RuleName: ruleName,
+          ScheduleName: 'Always',
+          Enable: 'True',
+          Duration: '60',
+          'EventSource.0.Type': 'AppEvent',
+          'EventSource.0.AppName': app_id,
+          'EventSource.0.AppEventType': 'SamplePropertyMotion',
+          'EventSource.0.Channel': '0',
+          'EventSource.0.State': state,
+          'EventAction.0.Type': action
+        });
+        params.set('EventSource.0.RuleIndexType', ruleEnabled ? 'Specific' : 'Any');
+        if (ruleEnabled) {
+          params.set('EventSource.0.RuleIndex', ruleIndex.toString());
+        }
+        document.getElementById('dynamic_property_rule_params').textContent = params.toString();
+
+        sendData(`${window.location.protocol}//${window.location.host}/stw-cgi/eventrules.cgi?${params.toString()}`, 'GET', {}, res, (success) => {
+          if (success) {
+            property_dynamic_rule_registered = true;
+          }
+        });
+      };
+
+      if (property_instance_registered) {
+        addDynamicRule();
+        return;
+      }
+
+      document.getElementById('property_rule_enable').checked = true;
+      document.getElementById('property_rule_index_wrapper').style.display = '';
+      document.getElementById('property_dynamic_rule_index_wrapper').style.display = '';
+      res.textContent = 'Registering Property instance...';
+      RegisterPropertyInstance((success) => {
+        if (success) {
+          addDynamicRule();
+        } else {
+          res.textContent = 'Fail: Property instance registration failed';
+        }
+      });
+    }
+
+    const TriggerProperty = () => {
+      const req = {
+        mode: 'trigger_property',
+        state: document.getElementById("state").value,
+        rule_index: parseInt(document.getElementById("property_rule_index").value)
+      }
+      const res = document.getElementById('response5');
+      sendData(uri, 'POST', req, res);
+    }
+
+    const UnregisterPropertyInstance = () => {
+      const req = {
+        mode: 'unregister_property_instance'
+      }
+      const res = document.getElementById('response6');
+      RemoveDynamicRule(property_rule_name, res, (success) => {
+        if (success) {
+          property_dynamic_rule_registered = false;
+        }
+        sendData(uri, 'POST', req, res, (success) => {
+          if (success) {
+            property_instance_registered = false;
+          }
+        });
+      });
+    }
+
+    const RemoveDynamicRule = (ruleName, res, callback) => {
+      const params = new URLSearchParams({
+        msubmenu: 'dynamicrules',
+        action: 'remove',
+        RuleName: ruleName
+      });
+      sendData(`${window.location.protocol}//${window.location.host}/stw-cgi/eventrules.cgi?${params.toString()}`, 'GET', {}, res, (success) => {
+        if (callback) {
+          callback(success);
+        }
+      });
+    }
+
+    const sendData = (uri, method, req, res, callback) => {
+      fetch(uri, {
+        method: method,
+        body: method === 'GET' ? undefined : JSON.stringify(req)
+      }).then(response => {
+        return response.text().then(body => {
+          console.log(body);
+          if (!response.ok) {
+            throw new Error(`request failed (${response.status}): ${body}`);
+          }
+          res.textContent = 'Pass';
+          if (callback) {
+            callback(true);
+          }
+          return true;
+        });
+      }).catch(error => {
+        console.error('Error', error);
+        res.textContent = 'Fail: ' + error;
+        if (callback) {
+          callback(false);
+        }
+        return false;
+      });
+    }
+  </script>
+
+  <style>
+    #response_dynamic_rule {
+      display: inline;
+      margin-left: 10px;
+    }
+    #response_dynamic_property_rule {
+      display: inline;
+      margin-left: 10px;
+    }
+  </style>
+  <style>
+    #response1 {
+      display: inline;
+      margin-left: 10px;
+    }
+  </style>
+  <style>
+    #response2 {
+      display: inline;
+      margin-left: 10px;
+    }
+  </style>
+  <style>
+    #response3 {
+      display: inline;
+      margin-left: 10px;
+    }
+  </style>
+  <style>
+    #response4 {
+      display: inline;
+      margin-left: 10px;
+    }
+  </style>
+  <style>
+    #response5 {
+      display: inline;
+      margin-left: 10px;
+    }
+  </style>
+  <style>
+    #response6 {
+      display: inline;
+      margin-left: 10px;
+    }
+  </style>
+</body>
+
+</html>

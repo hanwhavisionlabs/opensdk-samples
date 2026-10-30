@@ -1,0 +1,40 @@
+{
+  "LibraryFileName": "libapp_dispatcher_model.so",
+  "Instance": {
+    "InstanceName": "AppDispatcher",
+    "SchedulerName": "EComponents::eScheduler1",
+    "ReceiverNames": [
+      "Stub::Dispatcher::OpenAPI",
+      "HomeComponent",
+      "PyWriteEventLogComponent",
+      "PyAnalyticsInputEventComponent",
+      "SettingChangedInputEventComponent",
+      "DisplayImageComponent",
+      "EventTriggerComponent",
+      "MetadataSampleComponent",
+      "SendMetadataComponent",
+      "DynamicEventComponent",
+      "PyWebServiceComponent",
+      "SnapshotJpegComponent",
+      "SdcardOutputEventComponent",
+      "SetOsdMessageComponent"
+    ],
+    "SourceNames": [
+      {
+        "Source": "Stub::Dispatcher::OpenAPI",
+        "GroupName": "OpenSDK::python_based_component_and_event::Dispatcher"
+      },
+      {
+        "Source": "OpenAPIDispatcher",
+        "GroupName": "OpenSDK::python_based_component_and_event::Dispatcher"
+      },
+      {
+        "Source": "2009002",
+        "GroupName": "AppInfo"
+      }
+    ],
+    "Channel": 0,
+    "ModelPath": "../res/models/",
+    "SettingPath": "../storage/settings/"
+  }
+}

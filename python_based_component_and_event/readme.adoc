@@ -1,0 +1,107 @@
+== python_based_component_and_event
+
+This camera-only application integrates selected OpenSDK samples as Python
+components hosted by one `libpy_component_module.so` bridge. The application
+identity remains `python_based_component_and_event`; `HomeComponent` provides
+the safe dashboard.
+
+=== Integrated Components
+
+[options="header"]
+|===
+|Feature|Python component|Primary endpoint|Verification
+
+|Home|`HomeComponent`|`GET /home/status`|Safe liveness and registration dashboard
+|Write event log|`PyWriteEventLogComponent`|`POST /python/write_event_log`|Camera event log
+|Setting changed|`SettingChangedInputEventComponent`|`GET /configuration`|OpenPlatform setting-change events
+|Analytics input|`PyAnalyticsInputEventComponent`|`GET /python/analytics`|Motion event history
+|Snapshot JPEG|`SnapshotJpegComponent`|`POST /snapshot_jpeg/configuration`|Camera JPEG when the OpenPlatform snapshot service is available
+|Display image|`DisplayImageComponent`|`POST /display_image/startserver`|Network Manager TCP flow
+|Event trigger|`EventTriggerComponent`|`POST /event_trigger/configuration`|Rule registration and trigger
+|Metadata receive|`MetadataSampleComponent`|`GET /metadata_sample/status`|Typed metadata attachment
+|Send metadata|`SendMetadataComponent`|`POST /send_metadata/configuration`|Typed stream metadata request
+|Dynamic event|`DynamicEventComponent`|`POST /dynamic_event/configuration`|Schema/raw metadata flow
+|OSD|`SetOsdMessageComponent`|`POST /set_osd_message/configuration`|External multiline OSD
+|SD card|`SdcardOutputEventComponent`|`/sdcard_output_event/*`|SD card commands and replies
+|Webservice|`PyWebServiceComponent`|`POST /ANPRClientService/BigPictureRequest.svc`|Runtime custom endpoint registration and SOAP/XML flow
+|===
+
+Feature-prefixed routes keep each component's request fields and native event
+semantics within its own route. The `/configuration` route belongs to
+`SettingChangedInputEventComponent`, and `/python/health` remains a
+compatibility alias for Home.
+
+=== Scope Notes
+
+* Home never performs destructive or hardware actions automatically.
+* Dashboard `Pass` means the endpoint responded successfully; downstream
+  event effects require the feature-specific verification described below.
+* `PyWebServiceComponent` mirrors the `webservice_sample` HTTP contract. It
+  registers the default `/ANPRClientService/BigPictureRequest.svc` endpoint,
+  accepts additional clean absolute endpoint paths from the Webservice tab,
+  and returns the same SOAP/XML fields. Live raw video input, OpenCV/NV12
+  conversion, and JPEG production remain outside this integrated component;
+  when the existing `/tmp/download/image_service.jpeg` file is available, it
+  is Base64 encoded.
+* NPU and raw-video processing samples are not integrated.
+* SD-card functionality requires the `SDCard` permission, installation
+  approval, and physical SD media. Formatting is a manual destructive test.
+
+=== Python Bridge
+
+The bridge exposes SDK-level classes and enums rather than feature-specific
+facades. Added native surfaces include metadata values and requests, typed
+event attachments, Network Manager payloads, OpenPlatform/AppMsgParam,
+external OSD payloads, and RuleHandler ownership/scheduling.
+
+Payload ownership transfers to native event transport after `Send*Event`.
+Python must not reuse a payload after sending it. `GetAttachment()` returns a
+copy; `GetAttachmentPtr()` returns an event-owned pointer valid only for the
+event lifetime. HTTP handlers retrieve their request with
+`event.GetAttachmentPtr(OpenAppSerializable)` and must not retain that object
+after `ProcessAEvent()` returns.
+
+=== Prerequisites
+
+* Hanwha Vision Open Platform 23.00.00 or higher.
+* A camera with the required OpenSDK services for the selected feature.
+* SD-card media for SD-card tests.
+* WN9 validation uses the `wn9_v100` image and actual camera services.
+
+=== WN9 Build and Runtime
+
+Use an OpenSDK Docker image that matches the target SOC. The `26.08.15` version
+below is an example; replace it with the SDK image version used in your
+environment. `SDK_VER` is used as the Docker image tag (`opensdk:${SDK_VER}`).
+
+[source,bash]
+----
+APP_NAME=python_based_component_and_event \
+SDK_VER=26.08.15-wn9_v100 SOC=wn9_v100 \
+docker compose up
+----
+
+Install the generated CAP on the WN9 camera, wait for `Running`, then verify
+the actual feature effect, not only HTTP status. Do not store camera
+credentials in this document or in generated logs.
+
+=== Acceptance Checks
+
+* Home endpoint returns JSON with `component=HomeComponent`.
+* Write Event Log is confirmed in the camera event log.
+* Analytics receives a real motion event and returns it in history.
+* Changing a camera setting updates the `/configuration` status and appears in
+  the Setting Changed section of the Core Samples page.
+* Snapshot returns a camera-generated JPEG when the camera's OpenPlatform
+  snapshot service creates the configured relative file. If that service is
+  unavailable, the endpoint returns an explicit `503` response instead of a
+  fabricated image.
+* Display image starts the native Network Manager server, transfers an image,
+  and stops the server.
+* Rule registration, one-shot/property trigger cadence, and unregister work.
+* Metadata receive exposes channel/topic/output from a typed attachment.
+* Metadata send and dynamic event requests reach their native managers.
+* OSD appears and is disabled during component finalization.
+* SD-card status/start/stop/exclusive-mode results are checked on physical media.
+* Webservice returns the documented SOAP/XML response for the default and
+  UI-registered custom endpoint paths.

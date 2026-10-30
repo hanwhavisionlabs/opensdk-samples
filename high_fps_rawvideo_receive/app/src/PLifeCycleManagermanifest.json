@@ -1,0 +1,38 @@
+{
+  "SkeletonPortNumber": "auto",
+  "ContainerName": "high_fps_rawvideo_receive",
+  "AcceptLocalOnly": false,
+  "SchedulerNames": [
+    "eScheduler1",
+    "eClassificationScheduler"
+  ],
+  "RemoteContainerNames": [
+    {
+      "ContainerName": "System",
+      "Address": "localhost",
+      "PortNumber": 8587
+    }
+  ],
+  "RemoteComponentNames": [
+    {
+      "LocalComponentName": "Stub::Dispatcher::OpenAPI",
+      "ContainerName": "System",
+      "RemoteComponentName": "OpenAPIDispatcher"
+    },
+    {
+      "LocalComponentName": "SPMgrVideoRaw_0",
+      "ContainerName": "System",
+      "RemoteComponentName": "SPMgrVideoRaw_0"
+    },
+    {
+      "LocalComponentName": "Stub::Dispatcher::OpenSDK",
+      "ContainerName": "System",
+      "RemoteComponentName": "OpenSDKCGIDispatcher"
+    },
+    {
+      "LocalComponentName": "MetadataManager_0",
+      "ContainerName": "System",
+      "RemoteComponentName": "MetadataManager_0"
+    }
+  ]
+}

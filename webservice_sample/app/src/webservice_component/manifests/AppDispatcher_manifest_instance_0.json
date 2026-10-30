@@ -1,0 +1,28 @@
+{
+	"LibraryFileName": "libapp_dispatcher_model.so",
+	"Instance": {
+		"InstanceName": "AppDispatcher",
+		"SchedulerName": "EComponents::eScheduler1",
+		"ReceiverNames": [
+			"Stub::Dispatcher::OpenAPI",
+			"WebServiceComponent"
+		],
+		"SourceNames": [
+			{
+				"Source": "Stub::Dispatcher::OpenAPI",
+				"GroupName": "OpenSDK::webservice_sample::Dispatcher"
+			},
+			{
+				"Source": "OpenAPIDispatcher", 
+				"GroupName": "OpenSDK::webservice_sample::Dispatcher"
+			},
+			{  
+			"Source": "2009002",  
+			"GroupName": "AppInfo"  
+			}
+		],
+		"Channel": 0,
+		"ModelPath": "../res/models/",
+		"SettingPath": "../storage/settings/"
+	}
+}

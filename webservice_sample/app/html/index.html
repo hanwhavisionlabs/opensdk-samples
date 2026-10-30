@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>WebService Sample</title>
+</head>
+
+<body>
+  <h1>WebService Sample</h1>
+  <p>Send Event To WebService</p>
+  <form>
+    <button type="button" onclick="SendEventWebService()">Send Event WebService</button>
+    <div id="status"></div>
+    <br>
+    <br>
+    <div id="response1"></div>
+
+
+  </form>
+
+  <script>
+    const paths = window.location.pathname.split('/');
+    const app_id = paths[5];
+
+    const uri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/ANPRClientService/BigPictureRequest.svc`;
+    let requestCount = 0;
+    function SendEventWebService() {
+      requestCount++;
+      const res = document.getElementById('response1');
+      sendData(uri, 'POST', res, document.getElementById('status'));
+      console.log("response",response)
+    }
+    const sendData = (uri, method, xmlString, statusEl) => {
+      fetch(uri, {
+        method: method,
+        headers: { "Content-Type": "text/xml" },
+        body: xmlString
+      })
+      .then(response => {
+        if (response.status !== 200) {
+          throw new Error(`HTTP Error: ${response.status}`);
+        }  
+        return response.text();
+      })
+      .then(text => {
+        console.log("SOAP Response:", text);
+        document.getElementById('response1').innerText = text;
+        const timestamp = new Date();
+        statusEl.textContent = `Pass (request count ${requestCount}) timestamp at ${timestamp}`;
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        const timestamp = new Date();
+        statusEl.textContent = `Fail (request count ${requestCount}) timestamp at ${timestamp}: ${error}`;
+      });
+    }
+
+
+  </script>
+</body>
+
+</html>

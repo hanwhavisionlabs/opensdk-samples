@@ -1,0 +1,20 @@
+{
+  "LibraryFileName" : "libwebservice_component.so",
+  "Instance": {
+    "InstanceName" : "WebServiceComponent",
+    "SchedulerName" : "WebServiceComponentScheduler",
+    "ReceiverNames" : [
+      "AppDispatcher",
+      "OpenPlatform"
+    ],
+    "SourceNames": [
+      {
+        "Source": "OpenPlatform",
+        "GroupName": "AppMessage"
+      }      
+    ],
+    "Channel": 0,
+    "ModelPath": "",
+    "SettingPath": "../storage/settings/"
+  }
+}

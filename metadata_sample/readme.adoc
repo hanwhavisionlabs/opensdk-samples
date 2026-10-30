@@ -1,0 +1,23 @@
+== metadata_sample ==
+
+This sample application is designed how to get metadata from device.
+
+=== Prerequisites
+
+* Hanwha Vision Open Platform 23.00.00 or higher
+
+== Result
+
+* Metadata from device 
+
+== Building application
+
+[arabic]
+
+. Build application.
++
+....
+$ APP_NAME=metadata_sample SDK_VERSION=24.06.14(your SDK version) SOC=[cv5,wn9] docker compose up
+$ docker  compose down --remove-orphans
+....
+. Check the build reuslts in current directory.

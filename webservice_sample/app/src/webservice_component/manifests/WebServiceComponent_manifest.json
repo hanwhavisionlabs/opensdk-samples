@@ -1,0 +1,5 @@
+{
+  "LibraryFileName" : "libwebservice_component.so",
+  "Version" : "0.0.1",
+  "DynamicLoadable": true
+}

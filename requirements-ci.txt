@@ -1,0 +1,4 @@
+# Pin CI-only Python dependencies for reproducible repository checks.
+clang-format==18.1.8
+PyYAML==6.0.2
+ruff==0.11.13

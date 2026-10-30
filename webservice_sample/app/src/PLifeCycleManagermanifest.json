@@ -1,0 +1,33 @@
+{
+    "SkeletonPortNumber": "auto",
+    "ContainerName": "webservice_sample",
+    "AcceptLocalOnly": false,
+    "SchedulerNames": [
+        "EComponents::eScheduler1",
+        "WebServiceComponentScheduler"
+    ],
+    "RemoteContainerNames": [
+        {
+            "ContainerName": "System",
+            "Address": "localhost",
+            "PortNumber": 8587
+        }
+    ],
+    "RemoteComponentNames": [
+        {
+            "LocalComponentName": "Stub::Dispatcher::OpenAPI",
+            "ContainerName": "System",
+            "RemoteComponentName": "OpenAPIDispatcher"
+        },
+        {
+            "LocalComponentName": "OpenAPIDispatcher",
+            "ContainerName": "System",
+            "RemoteComponentName": "OpenAPIDispatcher"
+        },
+        {
+            "LocalComponentName": "OpenPlatform",
+            "ContainerName": "System",
+            "RemoteComponentName": "EComponents::eOpenPlatform"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+  "LibraryFileName": "libpy_component_module.so",
+  "Instance": {
+    "InstanceName": "PyAnalyticsInputEventComponent",
+    "SchedulerName": "EComponents::eScheduler1",
+    "ReceiverNames": ["AppDispatcher"],
+    "SourceNames": [
+      {
+        "Source": "MotionDetector_0",
+        "GroupName": "OpenSDK::Analytics"
+      }
+    ],
+    "Channel": 0,
+    "ModelPath": "../res/models/",
+    "SettingPath": "../storage/settings/"
+  },
+  "Additional": {
+    "PythonComponent": {
+      "Module": "PyAnalyticsInputEventComponent"
+    }
+  }
+}

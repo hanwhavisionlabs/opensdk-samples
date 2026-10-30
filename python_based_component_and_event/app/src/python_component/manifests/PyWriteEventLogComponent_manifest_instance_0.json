@@ -1,0 +1,23 @@
+{
+  "LibraryFileName": "libpy_component_module.so",
+  "Instance": {
+    "InstanceName": "PyWriteEventLogComponent",
+    "SchedulerName": "EComponents::eScheduler1",
+    "ReceiverNames": [
+      "AppDispatcher",
+      {
+        "SymbolName": "LogManager",
+        "RealName": "2009004"
+      }
+    ],
+    "SourceNames": [],
+    "Channel": 0,
+    "ModelPath": "../res/models/",
+    "SettingPath": "../storage/settings/"
+  },
+  "Additional": {
+    "PythonComponent": {
+      "Module": "PyWriteEventLogComponent"
+    }
+  }
+}

@@ -1,0 +1,288 @@
+== event_trigger
+
+This sample application is designed to test event rule instance registration
+and event triggering via the RuleManager. This SampleComponent registers
+"OneShot" and "Property" policy detector instances, and triggers those instances
+so that they can be used as event sources for Event Rules (dynamicrules).
+
+Related Interfaces are as follows:
+
+=== Register Rule Instance
+Registers a detector instance (OneShot or Property policy) to the RuleManager.
+
+=== Add OneShot Dynamic Rule (Optional)
+Adds a camera dynamic rule for the OneShot event exposed by this sample application.
+The web page sends the request directly to the camera's `eventrules.cgi`. Since the
+OneShot policy represents a pulse event, `State` is not included in the request.
+
+For more information on CGI (SUNAPI), please refer to the link below. +
+Link: https://step.hanwhavision.com/en/tech-support?group=d6cf6ed0-4412-4431-a6db-4997fb686859&version=04f2f40b-e45e-48d0-9aea-0f17f119cc8a&file=a8e4589a-95df-4149-8419-6554dbd139e4#4-event-rules
+
+*This feature has been added to improve usability and facilitate understanding.
+ The standard workflow is to register it through the web interface.
+ Please register it using the following webpage.*
+
+Webpage: [Setup]>[Event]>[Event rule]>[Add]>[Event trigger]>[+Add]>[Channel]>[Event trigger] tab
+
+=== Add Property Dynamic Rule (Optional)
+Adds a camera dynamic rule for the Property event exposed by this sample application.
+The web page automatically registers the Property instance before sending the CGI
+request when it has not been registered yet.
+
+For more information on CGI (SUNAPI), please refer to the link below. +
+Link: https://step.hanwhavision.com/en/tech-support?group=d6cf6ed0-4412-4431-a6db-4997fb686859&version=04f2f40b-e45e-48d0-9aea-0f17f119cc8a&file=a8e4589a-95df-4149-8419-6554dbd139e4#4-event-rules
+
+*This feature has been added to improve usability and facilitate understanding.
+ The standard workflow is to register it through the web interface.
+ Please register it using the following webpage.*
+
+Webpage: [Setup]>[Event]>[Event rule]>[Add]>[Event trigger]>[+Add]>[Channel]>[Event trigger] tab
+
+* *Rule Registration*
+** Register interface
++
+[options="header"]
+|===
+|Class|Interface|Parameter
+
+|RuleHandler|RegisterInstance|RuleHandler::RuleInstanceInfo
+|===
+** RuleInstanceInfo variable
++
+[options="header"]
+|===
+|Class|Variable|Type|Description
+
+|RuleHandler::RuleInstanceInfo|rule_instance_name|"[AppID].[Rule_Instance_Name]"|The name of the rule instance to be registered.
+||instance_type|IRuleManager::RuleInstance::Type|The type of the rule instance to be registered.
+||category|IRuleManager::RuleInstance::Category|The category of the rule instance to be registered.
+||Policy|"OneShot", "Property"|The policy of the detector instance to be registered.
+||State|"Idle", "OneShot", "Start", "Continue", "End"|The state of the detector instance.
+||ChannelSupport|"None", "All"|The channel support of the detector instance.
+||dynamic_rule_options|JSON Syntax Rules Options|The dynamic rule options of the detector instance.
+||(Optional) Rule.[index].Name|"Rule[Index]"|The name of the Rule to be created on the camera. If the Rule Enable checkbox is checked, a matching Rule is created on the camera.
+||(Optional) Rule.[index].Policy|"OneShot", "Property"|The policy of the Rule to be created on the camera. If the Rule Enable checkbox is checked, a matching Rule is created on the camera.
+||(Optional) Rule.[index].AlarmState|"Idle", "OneShot", "Start", "Continue", "End"|The alarm state of the Rule to be created on the camera. If the Rule Enable checkbox is checked, a matching Rule is created on the camera.
+|===
+
+=== Trigger Event
+Sends a Trigger to the RuleManager for a registered detector instance.
+
+* *Trigger Event*
+** Trigger interface
++
+[options="header"]
+|===
+|Class|Interface|Parameter
+
+|RuleHandler|Trigger|IRuleManager::RuleTrigger
+|===
+** RuleTrigger setter function
++
+[options="header"]
+|===
+|Class|Variable|Setter Function|Description
+
+|IRuleManager::RuleTrigger|set_channel|(int)Channel|The channel number of the trigger event.
+||set_detector|"[AppID].[Rule_Instance_Name]"|The name of the detector instance to be triggered.
+||set_state|"Idle", "OneShot", "Start", "Continue", "End"|The state of the detector instance to be triggered.
+||AddInfo|IRuleManager::RuleTrigger::TriggerInfo|Additional information for the trigger event.
+|===
+
+** TriggerInfo setter function
++
+[options="header"]
+|===
+|Class|Variable|Setter Function|Description
+
+|IRuleManager::RuleTrigger::TriggerInfo|set_timestamp|(uint64_t)timestamp|The timestamp of the trigger event.
+||set_alarm_state|"Idle", "OneShot", "Start", "Continue", "End"|The alarm state of the detector instance to be triggered.
+||(Optional) set_rule_index|int|The rule index of the detector instance to be triggered.
+|===
+
+=== Unregister Rule Instance
+Unregisters a previously registered detector instance from the RuleManager.
+
+* *Rule Unregistration*
+** Unregister interface
++
+[options="header"]
+|===
+|Class|Interface|Parameter
+
+|RuleHandler|UnregisterInstance|None
+|===
+
+==== Prerequisites
+
+* Hanwha Vision Open Platform 25.00.00 or higher
+
+== Register Rule Instance
+=== Register OneShot/Property Instance
+Registers a detector instance with "OneShot" or "Property" policy. If the
+*Rule Enable* checkbox is checked, the instance is registered with a
+dynamic rule option that also creates a matching Rule (Index 1) on the
+camera, so that the trigger can be immediately mapped to an Event Rule.
+
+==== Scenario
+
+* Test
+[arabic]
+. Start the application.
+. Click [Go App] in the [Open Platform] menu of the camera web viewer.
+. (Optional) Check the *Rule Enable* checkbox under [OneShot] or [Property].
+. Click [Send] on the [Register OneShot Rule Instance] or
+[Register Property Rule Instance] tab.
+
+* Input Data
++
+[options="header"]
+|===
+|Input data|Type|Description
+|enable|bool|Whether to register the instance with a matching Rule option.
+|===
+** Refer to the RegisterOneShotInstance() / RegisterPropertyInstance()
+function in sample_component.cc.
+
+==== Result
+
+* "Pass" is displayed next to the [Register OneShot Rule Instance] or
+[Register Property Rule Instance] button.
+* To check whether the instance has been registered, follow the path below:
+[source,text]
+----
+Web page: [Setup]>[Event]>[Event rule]>[Add]>[Event trigger]>[+Add]>[Channel]>[Event trigger] tab
+----
+* Add a registered Event Trigger on that tab.
+* (Optional) If the *Rule Enable* checkbox was checked, Select a Rule Index in the tab.
+* If the instance is already registered, the request fails and "Fail"
+is displayed next to the button.
+
+== Trigger Event
+=== Trigger One Shot
+Sends a single OneShot trigger for the registered OneShot instance. If
+the instance was registered with *Rule Enable*, the rule index is
+included so that the trigger is mapped to the Event Rule.
+
+==== Scenario
+
+* Test
+[arabic]
+. Register the OneShot instance first (see [Register OneShot/Property Instance]).
+. (Optional) When registering a Rule Instance, if *Rule Enable* is checked,
+the Rule Index is activated.
+. (Optional) Set the activated Rule Index to the "Rule Index" selected when 
+registering the Instance.
+. Click [Send] on the [Trigger One Shot] tab.
+
+* Input Data
++
+[options="header"]
+|===
+|Input data|Type|Description
+|(Optional) rule_index|int|Check *Rule Enable* and set the Rule Index that was selected when registering the Rule Instance.
+|===
+** Refer to the TriggerOneShot() function in sample_component.cc.
+
+==== Result
+
+* "Pass" is displayed next to the [Trigger One Shot] button.
+* To check the transmission of trigger events, follow the path below.:
+[source,text]
+----
+Web page: [Setup]>[System]>[Log]>[Event log] tab
+----
+* Check if the message "Event Rule [Index] Detected" is displayed.
+
+
+=== Trigger Property
+Sends a Property trigger with the selected state for the registered Property instance.
+If the instance was registered with *Rule Enable*, the rule index is included so that
+the trigger is mapped to the Event Rule.
+When registering a Property Instance, if Invert is not checked, the trigger is
+activated when the state is "Start", and a trigger must be sent every 5 seconds.
+Conversely, if Invert is checked, the trigger is activated when the state is "End",
+and it should be sent only once.
+
+==== Scenario
+
+* Test
+[arabic]
+. Register the Property instance first (see [Register Property Instance]).
+. Select the *State* ("Start" or "End") on the [Trigger Property] tab.
+. (Optional) When registering a Rule Instance, if *Rule Enable* is checked, the Rule
+Index is activated.
+. (Optional) Set the activated Rule Index to the "Rule Index" selected when
+registering the Instance.
+. Click [Send] on the [Trigger Property] tab.
+
+* Input Data
++
+[options="header"]
+|===
+|Input data|Type|Description
+|state|string|The Property state to trigger. "Start" or "End". When configuring
+an Event Rule on the camera, "Start" corresponds to "Invert" unchecked
+and "End" corresponds to "Invert" checked.
+|===
+** Refer to the TriggerProperty(const std::string& state) function in
+sample_component.cc.
+
+==== Result
+
+* "Pass" is displayed next to the [Trigger Property] button.
+* The trigger with the selected state is sent, and the same trigger is
+repeated every 5 seconds until 15 seconds have elapsed since the request
+or a new [Trigger Property] request is sent.
+* To check the transmission of trigger events, follow the path below.:
+[source,text]
+----
+Web page: [Setup]>[System]>[Log]>[Event log] tab
+----
+* Check if the message "Event Rule [Index] Detected" is displayed.
+
+== Unregister Rule Instance
+=== Unregister OneShot Instance
+Unregisters the previously registered OneShot instance.
+
+==== Scenario
+
+* Test
+[arabic]
+. Register the OneShot instance first (see [Register OneShot Instance]).
+. Click [Send] on the [Unregister OneShot Instance] tab.
+
+* Input Data
+** Refer to the UnregisterInstance() function in sample_component.cc.
+
+==== Result
+
+* "Pass" is displayed next to the [Unregister OneShot Instance] button.
+
+=== Unregister Property Instance
+Unregisters the previously registered Property instance.
+
+==== Scenario
+
+* Test
+[arabic]
+. Register the Property instance first (see [Register Property Instance]).
+. Click [Send] on the [Unregister Property Instance] tab.
+
+* Input Data
+** Refer to the UnregisterInstance() function in sample_component.cc.
+
+==== Result
+
+* "Pass" is displayed next to the [Unregister Property Instance] button.
+
+== Building Application
+
+[arabic]
+. Build application.
++
+....
+$ APP_NAME=event_trigger SDK_VER=26.08.06(your SDK version) SOC=[cv5, nvidia_jp512] docker compose up
+$ docker compose down --remove-orphans
+....
+. Check the build results in current directory. If successful, you will be able to find the cap file.

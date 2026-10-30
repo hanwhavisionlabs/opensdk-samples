@@ -1,0 +1,69 @@
+{
+    "SkeletonPortNumber": "auto",
+    "ContainerName": "python_based_component_and_event",
+    "AcceptLocalOnly": false,
+    "SchedulerNames": [
+        "EComponents::eScheduler1",
+        "Sch::NetworkService",
+        "EComponents::SunapiRequestScheduler"
+    ],
+    "RemoteContainerNames": [
+        {
+            "ContainerName": "System",
+            "Address": "localhost",
+            "PortNumber": 8587
+        }
+    ],
+    "RemoteComponentNames": [
+        {
+            "LocalComponentName": "Stub::Dispatcher::OpenAPI",
+            "ContainerName": "System",
+            "RemoteComponentName": "OpenAPIDispatcher"
+        },
+        {
+            "LocalComponentName": "OpenAPIDispatcher",
+            "ContainerName": "System",
+            "RemoteComponentName": "OpenAPIDispatcher"
+        },
+        {
+            "LocalComponentName": "OpenPlatform",
+            "ContainerName": "System",
+            "RemoteComponentName": "EComponents::eOpenPlatform"
+        },
+        {
+            "LocalComponentName": "Stub::Dispatcher::Eventstatus",
+            "ContainerName": "System",
+            "RemoteComponentName": "EventstatusCGIDispatcher"
+        },
+        {
+            "LocalComponentName": "2009004",
+            "ContainerName": "System",
+            "RemoteComponentName": "2009004"
+        },
+        {
+            "LocalComponentName": "MotionDetector_0",
+            "ContainerName": "System",
+            "RemoteComponentName": "MotionDetector_0"
+        },
+        {
+            "LocalComponentName": "RuleManager",
+            "ContainerName": "System",
+            "RemoteComponentName": "RuleManager"
+        },
+        {
+            "LocalComponentName": "MetadataManager_0",
+            "ContainerName": "System",
+            "RemoteComponentName": "MetadataManager_0"
+        },
+        {
+            "LocalComponentName": "Stub::Dispatcher::OpenSDK",
+            "ContainerName": "System",
+            "RemoteComponentName": "OpenSDKCGIDispatcher"
+        },
+        {
+            "LocalComponentName": "SRMgrVideo",
+            "ContainerName": "System",
+            "RemoteComponentName": "SRMgrVideo_0"
+        }
+    ]
+}

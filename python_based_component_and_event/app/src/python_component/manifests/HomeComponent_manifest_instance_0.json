@@ -1,0 +1,1 @@
+{"LibraryFileName":"libpy_component_module.so","Instance":{"InstanceName":"HomeComponent","SchedulerName":"EComponents::eScheduler1","ReceiverNames":["AppDispatcher"],"SourceNames":[],"Channel":0,"ModelPath":"../res/models/","SettingPath":"../storage/settings/"},"Additional":{"PythonComponent":{"Module":"HomeComponent"}}}

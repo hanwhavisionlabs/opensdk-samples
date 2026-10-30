@@ -1,0 +1,15 @@
+{
+  "LibraryFileName": "libsample_component.so",
+  "Instance": {
+    "InstanceName": "SampleComponent",
+    "SchedulerName": "SampleComponentScheduler",
+    "ReceiverNames": [
+      "AppDispatcher",
+      "RuleManager"
+    ],
+    "SourceNames": [],
+    "Channel": 0,
+    "ModelPath": "",
+    "SettingPath": "../storage/settings/"
+  }
+}

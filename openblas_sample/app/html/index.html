@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenBLAS sample</title>
+
+  <style>
+    body {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    .container {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,.1);
+      margin-bottom: 20px;
+    }
+
+    .matrix-input-1, .matrix-input-2 {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .matrix-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .matrix-controls input {
+      width: 35px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .matrix-table {
+      overflow-x: auto;
+    }
+
+    .table input {
+      width: 10px;
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #response {
+      background-color: #aca7a7;
+      padding: 15px;
+      border-radius: 4px;
+      border-left: 4px solid #4CAF50;
+      margin-top: 20px;
+      min-height: 50px;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0,0,0,.3);
+      border-radius: 50%;
+      border-top-color: #4CAF50;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .matrix-bracket {
+      position: relative;
+      padding: 0 15px;
+    }
+
+    .matrix-bracket::before, .matrix-bracket::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+    }
+
+    .matrix-bracket::before {
+      left: 0;
+      border-left: 2px solid #333;
+      border-top: 2px solid #333;
+      border-bottom: 2px solid #333;
+    }
+
+    .matrix-bracket::after {
+      right: 0;
+      border-right: 2px solid #333;
+      border-top: 2px solid #333;
+      border-bottom: 2px solid #333;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>OpenBLAS matrix multiplication sample</h1>
+
+  <div class="container">
+    <h2>Matrix Input (Min:1, Max:3)</h2>
+
+    <div class="matrix-controls">
+      <label for="rows">row:</label>
+      <input type="number" id="rows" min="1" max="3" value="2">
+      <label for="cols">col:</label>
+      <input type="number" id="cols" min="1" max="3" value="2">
+      <button id="create-matrix">Create</button>
+    </div>
+
+    <div class="matrix-input-1">
+      <div class="matrix-table" id="matrix-container-1"></div>
+    </div>
+    <div class="matrix-input-2">
+      <div class="matrix-table" id="matrix-container-2"></div>
+    </div>
+  </div>
+
+  <button id="send-data">Send</button>
+  <span id="loading-indicator" style="display: none;" class="loading"></span>
+
+  <div id="response"/>
+</body>
+
+<script>
+  document.getElementById('create-matrix').addEventListener('click', function(){
+    createMatrixInputs();
+  });
+
+  document.getElementById('send-data').addEventListener('click', function() {
+    sendMatrixdata();
+  });
+
+  function createMatrixInputs() {
+    const rows = parseInt(document.getElementById('rows').value);
+    const cols = parseInt(document.getElementById('cols').value);
+    const container1 = document.getElementById('matrix-container-1');
+    const container2 = document.getElementById('matrix-container-2');
+
+    if(isNaN(rows) || rows < 1 || rows > 3 || isNaN(cols) || cols < 1 || cols > 3) {
+      alert(' min : 1 or max : 4');
+      return;
+    }
+
+    let html = '<h3>Matrix 1</h3><div class="matrix-bracket"><table>';
+    for(let i = 0; i < rows; i++) {
+      html += '<tr>';
+      for(let j = 0; j < cols; j++) {
+        html += `<td><input type="number" id="cell1-${i}-${j}" value="${Math.floor(Math.random() * 5) + 1}"></td>`;
+      }
+    }
+    html += '</table></div>';
+
+    container1.innerHTML = html;
+
+    html = '<h3>Matrix 2</h3><div class="matrix-bracket"><table>';
+    for(let i = 0; i < rows; i++) {
+      html += '<tr>';
+      for(let j = 0; j < cols; j++) {
+        html += `<td><input type="number" id="cell2-${i}-${j}" value="${Math.floor(Math.random() * 5) + 1}"></td>`;
+      }
+    }
+    html += '</table></div>';
+    container2.innerHTML = html;
+  }
+
+  function sendMatrixdata() {
+    const rows = parseInt(document.getElementById('rows').value);
+    const cols = parseInt(document.getElementById('cols').value);
+    const matrixData1 = [];
+    const matrixData2 = [];
+
+    for(let i = 0; i < rows; i++) {
+      const rows = [];
+      for(let j = 0; j < cols; j++) {
+        const cellValue = parseFloat(document.getElementById(`cell1-${i}-${j}`).value);
+        rows.push(isNaN(cellValue) ? 0 : cellValue);
+      }
+      matrixData1.push(rows);
+    }
+
+    for(let i = 0; i < rows; i++) {
+      const rows = [];
+      for(let j = 0; j < cols; j++) {
+        const cellValue = parseFloat(document.getElementById(`cell2-${i}-${j}`).value);
+        rows.push(isNaN(cellValue) ? 0 : cellValue);
+      }
+      matrixData2.push(rows);
+    }
+
+    const paths = window.location.pathname.split('/');
+    const app_id = paths[5];
+
+    const uri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/opensdk/${app_id}/calculation`;
+
+    document.getElementById('loading-indicator').style.display = 'inline-block';
+
+    fetch(uri, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        rows: rows,
+        cols: cols,
+        matrix_1: matrixData1,
+        matrix_2: matrixData2
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      handleResponse(data);
+    })
+    .catch(error => {
+      handleError(error);
+    })
+
+  }
+
+  function handleResponse(data) {
+    console.log(data);
+
+    document.getElementById('loading-indicator').style.display = 'none';
+
+    const responseElement = document.getElementById('response');
+    let html = `<p class="success">Calculation Success</p>`;
+
+    if(data.result) {
+      html += '<p>Received matrix</p>';
+      html += '<div class="matrix-bracket"><table>';
+      for(let i = 0; i < data.rows; i++) {
+        html += '<tr>';
+        for(let j = 0; j < data.cols; j++) {
+          html += `<td>${data.result[i][j]}</td>`;
+        }
+        html += '</tr>';
+      }
+      html += '</table></div>';
+    }
+
+    responseElement.innerHTML = html;
+  }
+
+  function handleError(error) {
+    document.getElementById('loading-indicator').style.display = 'none';
+
+    const responseElement = document.getElementById('response');
+    responseElement.innerHTML = `<p class="error">error : ${error}</p>`;
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    createMatrixInputs();
+  });
+</script>
+
+</html>

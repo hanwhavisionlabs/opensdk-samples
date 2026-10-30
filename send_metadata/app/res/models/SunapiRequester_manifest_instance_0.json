@@ -1,0 +1,15 @@
+{
+    "LibraryFileName" : "libsunapi_requester.so",
+    "Instance": {
+        "InstanceName" : "SunapiRequester",
+        "SchedulerName" : "EComponents::SunapiRequestScheduler",
+        "ReceiverNames" : [
+			"EComponents::eOpenPlatform"
+        ],
+        "SourceNames" : [
+		],
+        "Channel": 0,
+        "ModelPath" : "../res/models/",
+        "SettingPath": "/mnt/setting/"
+    }
+}

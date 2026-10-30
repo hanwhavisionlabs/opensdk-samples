@@ -1,0 +1,5 @@
+{
+  "AppName": "python_based_component_and_event",
+  "AppVersion": "1.0.0",
+  "Permission": ["SDCard"]
+}

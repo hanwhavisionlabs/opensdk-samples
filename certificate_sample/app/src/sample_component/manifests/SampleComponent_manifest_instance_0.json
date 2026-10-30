@@ -1,0 +1,21 @@
+{
+  "LibraryFileName": "libsample_component.so",
+  "Instance": {
+    "__comment__": "2009004 = LifeCycleManagerInterface::EReceivers::eLogManager",
+    "InstanceName": "SampleComponent",
+    "SchedulerName": "SampleComponentScheduler",
+    "ReceiverNames": [
+      "AppDispatcher",
+      {
+        "SymbolName": "LogManager",
+        "RealName": "2009004"
+      },
+      "OpenPlatform"
+    ],
+    "SourceNames": [
+    ],
+    "Channel": 0,
+    "ModelPath": "../res/models/",
+    "SettingPath": "../storage/settings/"
+  }
+}

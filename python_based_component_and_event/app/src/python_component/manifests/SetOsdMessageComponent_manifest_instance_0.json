@@ -1,0 +1,1 @@
+{"LibraryFileName":"libpy_component_module.so","Instance":{"InstanceName":"SetOsdMessageComponent","SchedulerName":"EComponents::eScheduler1","ReceiverNames":["AppDispatcher","SRMgrVideo"],"SourceNames":[],"Channel":0,"ModelPath":"../res/models/","SettingPath":"../storage/settings/"},"Additional":{"PythonComponent":{"Module":"SetOsdMessageComponent"}}}

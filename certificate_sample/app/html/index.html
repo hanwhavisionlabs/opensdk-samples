@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificate Manager Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 24px; }
+    h1 { color: #1a1a2e; margin-bottom: 4px; }
+    .subtitle { color: #555; margin-bottom: 24px; font-size: 14px; }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .card h2 { font-size: 16px; color: #333; margin-bottom: 12px; border-bottom: 2px solid #4f8ef7; padding-bottom: 6px; }
+
+    .field { display: flex; align-items: center; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
+    .field label { width: 120px; font-size: 13px; color: #555; flex-shrink: 0; }
+    .field input, .field textarea {
+      flex: 1; min-width: 200px;
+      border: 1px solid #ccc; border-radius: 6px;
+      padding: 6px 10px; font-size: 13px;
+    }
+    .field textarea { height: 60px; resize: vertical; }
+
+    button {
+      background: #4f8ef7; color: #fff;
+      border: none; border-radius: 6px;
+      padding: 8px 20px; font-size: 13px;
+      cursor: pointer; transition: background .2s;
+    }
+    button:hover { background: #2d6ed6; }
+    button:active { background: #1a4fa3; }
+
+    .result-box {
+      margin-top: 12px;
+      background: #f7f9fc;
+      border: 1px solid #d0d9e8;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      min-height: 36px;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    .ok   { color: #1a7a4a; }
+    .fail { color: #c0392b; }
+  </style>
+</head>
+<body>
+  <h1>🔐 Certificate API Test</h1>
+
+  <!-- ① Load Device Certificate -->
+  <div class="card">
+    <h2>① Load Device Certificate (기기 공개 인증서 로드)</h2>
+    <div class="field">
+      <label>To Path</label>
+      <input id="lcs-path" value="/tmp/cc" />
+    </div>
+    <button onclick="doLoadCert()">Load Device Certificate</button>
+    <div class="result-box" id="lcs-result">—</div>
+  </div>
+
+  <!-- ② Create Digital Signature -->
+  <div class="card">
+    <h2>② Create Digital Signature (디지털 서명 생성)</h2>
+    <div class="field">
+      <label>Key Name</label>
+      <input id="sig-name" value="default" />
+    </div>
+    <div class="field">
+      <label>Data</label>
+      <textarea id="sig-data">Hello, Wisenet!</textarea>
+    </div>
+    <div class="field">
+      <label>Digest</label>
+      <input id="sig-digest" value="SHA256" />
+    </div>
+    <button onclick="doSign()">Create Signature</button>
+    <div class="result-box" id="sig-result">—</div>
+  </div>
+
+  <script>
+    const paths  = window.location.pathname.split('/');
+    const app_id = paths[5];
+    const base   = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/opensdk/${app_id}`;
+
+    function setResult(id, ok, text) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = 'result-box ' + (ok ? 'ok' : 'fail');
+    }
+
+    async function post(path, body, resultId) {
+      setResult(resultId, true, '⏳ 요청 중...');
+      try {
+        const res = await fetch(base + path, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const json = await res.json();
+        if (res.ok) {
+          setResult(resultId, true, '✅ 성공\n' + JSON.stringify(json, null, 2));
+        } else {
+          setResult(resultId, false, '❌ 실패 [' + res.status + ']\n' + JSON.stringify(json, null, 2));
+        }
+      } catch (e) {
+        setResult(resultId, false, '❌ 오류: ' + e.message);
+      }
+    }
+
+    function doLoadCert() {
+      post('/cert/load-cert', {
+        to_path: document.getElementById('lcs-path').value
+      }, 'lcs-result');
+    }
+
+    function doSign() {
+      post('/cert/sign', {
+        name:   document.getElementById('sig-name').value,
+        data:   document.getElementById('sig-data').value,
+        digest: document.getElementById('sig-digest').value
+      }, 'sig-result');
+    }
+  </script>
+</body>
+</html>
