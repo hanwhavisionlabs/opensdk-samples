@@ -8,14 +8,28 @@ The samples cover camera events, media and metadata handling, SUNAPI requests, N
 
 - Docker with Docker Compose
 - A Hanwha Vision camera that supports OpenSDK applications <!-- TODO: link to the supported devices list -->
-- The OpenSDK Docker image, loaded as `opensdk:<version>`:
+- The OpenSDK Docker image, available locally as `opensdk:<version>`
+
+### Get the OpenSDK image
+
+The samples build with `opensdk:<version>`. Get the image in either of these ways.
+
+**From Docker Hub.** The image is published as [hanwhavisionlabs/opensdk](https://hub.docker.com/r/hanwhavisionlabs/opensdk). Pull the version you need and tag it with the name the samples use:
+
+```bash
+docker pull hanwhavisionlabs/opensdk:<version>
+docker tag hanwhavisionlabs/opensdk:<version> opensdk:<version>
+```
+
+**From the distributed image file.** Loading `opensdk-<version>.tar.gz` creates `opensdk:<version>` directly:
 
 ```bash
 docker load -i opensdk-<version>.tar.gz
-docker images opensdk
 ```
 
-<!-- TODO: Docker Hub repository and pull command, once the image name and tags are fixed -->
+Check the image with `docker images opensdk`.
+
+Each release has two tags for the same image: `<version>` (for example, `26.10.26`) and `<version>_<soc>`, which names the SoC family the image supports (for example, `26.10.26_wn9`). Use the `<version>` tag as `SDK_VER` when you build a sample. There is no `latest` tag.
 
 ## Samples
 
