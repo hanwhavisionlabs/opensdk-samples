@@ -122,36 +122,6 @@ The compose file runs the OpenSDK toolchain in the `opensdk:${SDK_VER}` containe
 
 Packaging needs a signing key and certificate in `/opt/opensdk/signature` of the OpenSDK image. See the OpenSDK Programming Guide for how to obtain and add them.
 
-### Sample-specific build notes
-
-- `openblas_sample` builds OpenBLAS from source. Clone it into `openblas_sample/app/external/OpenBLAS` before `docker compose up`, as described in the sample readme. Add `CLEAN_OPENBLAS=ON` to rebuild OpenBLAS from a clean state.
-- `python_based_component_and_event` runs on a camera only. Build it with the OpenSDK image and `SOC` that match the target camera.
-- Some samples need camera features or external services, such as analytics, an SD card, an audio input, or an FTP or SMTP server. Check the sample readme before installing.
-
-### Generated files
-
-A build writes `app/build/`, `app/bin/`, `app/libs/`, and `config/build_info.json` in the sample directory and creates an empty `app/storage/`. The NPU samples also copy the model and its notices from the OpenSDK image into `app/res/ai_bin/`. Git ignores these build outputs.
-
-## Troubleshooting
-
-- If packaging reports a missing private key or certificate, the signing files in `/opt/opensdk/signature` are missing or do not match. It is not a sign that the application build failed.
-- The camera refuses to start an application when its memory usage is too high. If an installed app does not reach **Running**, free memory on the camera (for example, stop applications you do not need) and start it again.
-
-## Contributing
-
-Pull requests and pushes to `main` run static checks: JSON and YAML syntax, Python syntax and `ruff`, whitespace, and `clang-format` on changed C/C++ files. The checks do not need the OpenSDK image. To run them locally:
-
-```bash
-python3 -m pip install -r requirements-ci.txt
-python3 scripts/ci/check_syntax.py
-python3 -m compileall -q python_based_component_and_event/app/src/python_component scripts/ci
-ruff check python_based_component_and_event/app/src/python_component scripts/ci
-git diff --check
-clang-format --dry-run --Werror --style=file path/to/changed_file.cc
-```
-
-Building, packaging, and running a sample still need the OpenSDK image and a camera.
-
 ## Documentation
 
 For programming guides and API references, see the [OpenSDK Documentation](https://hanwhavisionlabs.github.io/opensdk-docs/).
