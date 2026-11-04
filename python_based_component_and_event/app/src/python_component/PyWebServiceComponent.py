@@ -8,12 +8,9 @@ from urllib.parse import urlsplit
 from PyComponentModule import Component, HttpAuthMethod, OpenAppResponseType, OpenAppSerializable
 
 
-DEFAULT_ENDPOINT = "/ANPRClientService/BigPictureRequest.svc"
+DEFAULT_ENDPOINT = "/SampleWebService/GetImage"
 REGISTRATION_ENDPOINT = "/python/webservice/register"
 JPEG_PATH = Path("/tmp/download/image_service.jpeg")
-SITE_ID = "3742"
-ACCOUNT_ID = "2889"
-TRANSACTION_ID = "1004346"
 RESERVED_ENDPOINTS = {"/opensdk", "/home/setup/opensdk/html"}
 RESERVED_PREFIXES = ("/opensdk/", "/home/setup/opensdk/html/")
 PROTECTED_ENDPOINTS = {
@@ -167,14 +164,11 @@ class PyWebServiceComponent(Component):
             image = ""
 
         return f'''<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cit="http://www.cityringclientservice.ae">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:smp="urn:example:opensdk:webservice-sample">
   <soapenv:Body>
-    <cit:GetBigPictureResponse>
-      <cit:SiteId>{SITE_ID}</cit:SiteId>
-      <cit:AccountId>{ACCOUNT_ID}</cit:AccountId>
-      <cit:TransactionId>{TRANSACTION_ID}</cit:TransactionId>
-      <cit:Base64String>{image}</cit:Base64String>
-    </cit:GetBigPictureResponse>
+    <smp:GetImageResponse>
+      <smp:Base64String>{image}</smp:Base64String>
+    </smp:GetImageResponse>
   </soapenv:Body>
 </soapenv:Envelope>
 '''

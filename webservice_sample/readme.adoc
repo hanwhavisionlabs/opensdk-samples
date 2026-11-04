@@ -13,13 +13,13 @@ This sample application is designed to test request webservice.
 This sample application demonstrates how OpenSDK enables external HTTP requests to be integrated into an application through a component-based, event-driven architecture. It shows not only how endpoints are registered but also how they are used, processed, and responded to.
 When the application starts, custom HTTP endpoints are registered with OpenSDK. The purposes are:
 
-* Allow the device to receive HTTP requests from external clients (e.g., SIRA BigPictureRequest).
+* Allow the device to receive HTTP requests from external clients (e.g., an external system that requests an image over SOAP/XML).
 
 * Forward incoming requests to the application through the AppDispatcher for event-driven processing.
 
 * Enable the application to execute business logic and generate responses (e.g., SOAP/XML with base64-encoded image data).
 
-* Support custom authentication, including unauthenticated access for endpoints like SIRA (CustomSetting(true, netsvc::IHttpdService::AuthMethod::kNone)).
+* Support custom authentication, including unauthenticated access for endpoints called by external systems (CustomSetting(true, netsvc::IHttpdService::AuthMethod::kNone)).
 
 === III. Implementation steps
 . Setting up CustomSetting() for authentication configuration
@@ -33,12 +33,12 @@ attach->CustomSetting(true, netsvc::IHttpdService::AuthMethod::kNone);
 +
 [source,xml]
 ----
- const uri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/ANPRClientService/BigPictureRequest.svc`;
+ const uri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/SampleWebService/GetImage`;
 ----
 +
 [source,xml]
 ----
-auto* attach = new ("OpenAPIRegistrar") IAppDispatcher::OpenAPIRegistrar(String("/ANPRClientService/BigPictureRequest.svc"), GetInstanceName(), "POST");
+auto* attach = new ("OpenAPIRegistrar") IAppDispatcher::OpenAPIRegistrar(String("/SampleWebService/GetImage"), GetInstanceName(), "POST");
 SendNoReplyEvent("AppDispatcher", (int32_t)IAppDispatcher::EEventType::eRegisterCommand, 0, attach);
 ----
 +
@@ -62,8 +62,8 @@ bool WebServiceComponent::ParseHttpEvent(Event* event) {
 
   auto oas = static_cast<OpenAppSerializable*>(event->GetBaseObjectArgument());
   auto path_info = oas->GetFCGXParam("PATH_INFO");
-  // Check if the client is calling the BigPictureRequest service endpoint
-  if (path_info == "/ANPRClientService/BigPictureRequest.svc") { 
+  // Check if the client is calling the GetImage service endpoint
+  if (path_info == "/SampleWebService/GetImage") {
     if (oas->GetMethod() == "POST") {
       oas->SetStatusCode(200); //request OK
       oas->SetResponseBody(requestHttpService()); //requestHttpService() return xml body response
@@ -99,10 +99,10 @@ bool WebServiceComponent::ParseHttpEvent(Event* event) {
 . Click [Send Event WebService]
 == Result
 - **When clicking [Send Event Webservice] in the UI:**
-  * The application sends an HTTP POST request to the API: `/ANPRClientService/BigPictureRequest.svc`.
+  * The application sends an HTTP POST request to the API: `/SampleWebService/GetImage`.
   * If the request is successful (**HTTP 200 OK**), the XML response is displayed on the UI next to the button.
 - **Or use in terminal:**
-  curl -X POST "http://<device_ip>/ANPRClientService/BigPictureRequest.svc"
+  curl -X POST "http://<device_ip>/SampleWebService/GetImage"
 
 - **Notes:**
   * `<device_ip>`: IP address of the device on which the application is running.
@@ -114,14 +114,11 @@ bool WebServiceComponent::ParseHttpEvent(Event* event) {
 [source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cit="http://www.cityringclientservice.ae">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:smp="urn:example:opensdk:webservice-sample">
   <soapenv:Body>
-    <cit:GetBigPictureResponse>
-      <cit:SiteId>3742</cit:SiteId>
-      <cit:AccountId>2889</cit:AccountId>
-      <cit:TransactionId>1004346</cit:TransactionId>
-      <cit:Base64String>/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgc</cit:Base64String>
-    </cit:GetBigPictureResponse>
+    <smp:GetImageResponse>
+      <smp:Base64String>/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgc</smp:Base64String>
+    </smp:GetImageResponse>
   </soapenv:Body>
 </soapenv:Envelope>
 ----

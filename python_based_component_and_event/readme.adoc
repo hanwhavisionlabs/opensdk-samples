@@ -23,7 +23,7 @@ the safe dashboard.
 |Dynamic event|`DynamicEventComponent`|`POST /dynamic_event/configuration`|Schema/raw metadata flow
 |OSD|`SetOsdMessageComponent`|`POST /set_osd_message/configuration`|External multiline OSD
 |SD card|`SdcardOutputEventComponent`|`/sdcard_output_event/*`|SD card commands and replies
-|Webservice|`PyWebServiceComponent`|`POST /ANPRClientService/BigPictureRequest.svc`|Runtime custom endpoint registration and SOAP/XML flow
+|Webservice|`PyWebServiceComponent`|`POST /SampleWebService/GetImage`|Runtime custom endpoint registration and SOAP/XML flow
 |===
 
 Feature-prefixed routes keep each component's request fields and native event
@@ -37,7 +37,7 @@ compatibility alias for Home.
 * Dashboard `Pass` means the endpoint responded successfully; downstream
   event effects require the feature-specific verification described below.
 * `PyWebServiceComponent` mirrors the `webservice_sample` HTTP contract. It
-  registers the default `/ANPRClientService/BigPictureRequest.svc` endpoint,
+  registers the default `/SampleWebService/GetImage` endpoint,
   accepts additional clean absolute endpoint paths from the Webservice tab,
   and returns the same SOAP/XML fields. Live raw video input, OpenCV/NV12
   conversion, and JPEG production remain outside this integrated component;

@@ -76,7 +76,7 @@ bool WebServiceComponent::ParseHttpEvent(Event* event) {
 
   auto oas = static_cast<OpenAppSerializable*>(event->GetBaseObjectArgument());
   auto path_info = oas->GetFCGXParam("PATH_INFO");
-  if (path_info == "/ANPRClientService/BigPictureRequest.svc") {
+  if (path_info == "/SampleWebService/GetImage") {
     if (oas->GetMethod() == "POST") {
       oas->SetStatusCode(200);
       oas->SetResponseBody(requestHttpService());
@@ -95,14 +95,11 @@ bool WebServiceComponent::ParseHttpEvent(Event* event) {
 std::string WebServiceComponent::requestHttpService() {
   std::string response_body = "";
   response_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-  response_body += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cit=\"http://www.cityringclientservice.ae\">\n";
+  response_body += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:smp=\"urn:example:opensdk:webservice-sample\">\n";
   response_body += "  <soapenv:Body>\n";
-  response_body += "    <cit:GetBigPictureResponse>\n";
-  response_body += "      <cit:SiteId>3742</cit:SiteId>\n";
-  response_body += "      <cit:AccountId>2889</cit:AccountId>\n";
-  response_body += "      <cit:TransactionId>1004346</cit:TransactionId>\n";
-  response_body += "      <cit:Base64String>" + MakeBase64TestString() + "</cit:Base64String>\n";
-  response_body += "    </cit:GetBigPictureResponse>\n";
+  response_body += "    <smp:GetImageResponse>\n";
+  response_body += "      <smp:Base64String>" + MakeBase64TestString() + "</smp:Base64String>\n";
+  response_body += "    </smp:GetImageResponse>\n";
   response_body += "  </soapenv:Body>\n";
   response_body += "</soapenv:Envelope>\n";
   return response_body;
@@ -138,7 +135,7 @@ std::string WebServiceComponent::base64_encode(const char* in, size_t n) {
 }
 
 void WebServiceComponent::RegisterOpenAPIURI() {
-  auto* attach = new ("OpenAPIRegistrar") IAppDispatcher::OpenAPIRegistrar(String("/ANPRClientService/BigPictureRequest.svc"), GetInstanceName(), "POST");
+  auto* attach = new ("OpenAPIRegistrar") IAppDispatcher::OpenAPIRegistrar(String("/SampleWebService/GetImage"), GetInstanceName(), "POST");
   attach->CustomSetting(true, netsvc::IHttpdService::AuthMethod::kNone);
   SendNoReplyEvent("AppDispatcher", (int32_t)IAppDispatcher::EEventType::eRegisterCommand, 0, attach);
 }
