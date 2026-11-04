@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 Hanwha Vision Co., Ltd. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <html lang="en">
 
 <head>
@@ -17,6 +19,10 @@
     </form>
 
     <script>
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+      }
+
         const paths = window.location.pathname.split('/');
         const app_id = paths[5];
         const onGetAnalyticsInfo = () => {
@@ -36,7 +42,7 @@
                     let infoString = '';
                     let idx = 1;
                     data.infos.forEach(info => {
-                        infoString += `<tr><td>${idx++}</td><td>${info.event_type}</td><td>${info.message_time}</td><td>${info.state}</td><td>${info.channel}</td></tr>`
+                        infoString += `<tr><td>${idx++}</td><td>${escapeHtml(info.event_type)}</td><td>${escapeHtml(info.message_time)}</td><td>${escapeHtml(info.state)}</td><td>${escapeHtml(info.channel)}</td></tr>`
                     });
                     infos.innerHTML = `<table><tr><th scope="col">Index</td><th scope="col">EventType</td><th scope="col">MessageTime</td><th scope="col">State</td><th scope="col">Channel</td></tr>${infoString}</table>`;
                 })

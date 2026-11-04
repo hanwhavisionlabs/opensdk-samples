@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Register dynamic-event payloads only when the native dispatcher enums exist.
 import json
 import time

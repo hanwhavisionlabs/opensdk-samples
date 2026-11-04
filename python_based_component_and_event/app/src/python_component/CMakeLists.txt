@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Build the Python sample components as Cython extension modules.
 
 # Shared, SOC-independent, native Python 3.13 interpreter staged into the

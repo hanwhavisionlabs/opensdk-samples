@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 cmake_minimum_required(VERSION 3.2.2)
 
 set(CMAKE_CXX_STANDARD 17 )

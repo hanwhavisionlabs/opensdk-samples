@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 set(TARGET_LIB classification)
 
 set(NPU_API_DIR ${WISENET_PRODUCT_RELEASE_PATH}/lib/npu_api/)

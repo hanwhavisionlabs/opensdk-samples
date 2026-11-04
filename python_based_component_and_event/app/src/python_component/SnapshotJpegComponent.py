@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Request a camera JPEG snapshot through the native OpenPlatform event.
 import json
 import os

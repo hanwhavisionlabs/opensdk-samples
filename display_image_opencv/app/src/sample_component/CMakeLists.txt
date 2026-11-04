@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 set(TARGET_LIB sample_component)
 
 add_library(${TARGET_LIB} MODULE sample_component.cc)

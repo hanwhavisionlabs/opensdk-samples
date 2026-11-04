@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Validate the syntax of tracked JSON and YAML files without changing them.
 
 from __future__ import annotations

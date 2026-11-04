@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Send multiline external OSD settings through SRMgrVideo.
 import json
 from PyComponentModule import Component, MultilineExternalOsdDeliveryObject, MultilineOsdItem, OpenAppResponseType, OpenAppSerializable, StreamRequesterManagerVideoEventType

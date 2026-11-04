@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 Hanwha Vision Co., Ltd. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <html lang="en">
 
 <head>
@@ -18,6 +20,10 @@
     <div id="infos" />
 
     <script>
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+      }
+
         const paths = window.location.pathname.split('/');
         const app_id = paths[5];
 
@@ -67,7 +73,7 @@
                     let infoString = '';
                     let idx = 0;
                     data.infos.forEach(info => {
-                        infoString += `<tr><td>${idx++}</td><td>${info.app_id}</td><td>${info.app_name}</td><td>${info.status}</td><td>${info.installed_date}</td><td>${info.version}</td></tr>`
+                        infoString += `<tr><td>${idx++}</td><td>${escapeHtml(info.app_id)}</td><td>${escapeHtml(info.app_name)}</td><td>${escapeHtml(info.status)}</td><td>${escapeHtml(info.installed_date)}</td><td>${escapeHtml(info.version)}</td></tr>`
                     });
                     infos.innerHTML = `<table><tr><th scope="col">Index</td><th scope="col">AppID</td><th scope="col">AppName</td><th scope="col">Status</td><th scope="col">Installed Date</td><th scope="col">Version</td></tr>${infoString}</table>`;
                 })

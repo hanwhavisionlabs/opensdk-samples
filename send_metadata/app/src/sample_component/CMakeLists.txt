@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 set(TARGET_LIB sample_component)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/includes)

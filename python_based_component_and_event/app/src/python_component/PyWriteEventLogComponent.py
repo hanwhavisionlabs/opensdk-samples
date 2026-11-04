@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Send an event log through the native LogManager event transport.
 from PyComponentModule import Component, OpenAppResponseType, OpenAppSerializable, Log, LogType, LogDetailType, LogManagerEvent
 

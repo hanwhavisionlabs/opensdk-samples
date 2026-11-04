@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Assemble the integrated sample application's Python bundles.
 add_subdirectory(python_component)
 

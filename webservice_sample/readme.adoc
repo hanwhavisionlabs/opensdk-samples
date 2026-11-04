@@ -19,14 +19,14 @@ When the application starts, custom HTTP endpoints are registered with OpenSDK. 
 
 * Enable the application to execute business logic and generate responses (e.g., SOAP/XML with base64-encoded image data).
 
-* Support custom authentication, including unauthenticated access for endpoints called by external systems (CustomSetting(true, netsvc::IHttpdService::AuthMethod::kNone)).
+* Require HTTP Digest authentication for the custom endpoint (CustomSetting(true, netsvc::IHttpdService::AuthMethod::kDigest)).
 
 === III. Implementation steps
 . Setting up CustomSetting() for authentication configuration
 +
 [source,xml]
 ----
-attach->CustomSetting(true, netsvc::IHttpdService::AuthMethod::kNone);
+attach->CustomSetting(true, netsvc::IHttpdService::AuthMethod::kDigest);
 ----
 +
 . Registering custom URIs (outside the default /opensdk/<AppID>/ path)
@@ -102,10 +102,11 @@ bool WebServiceComponent::ParseHttpEvent(Event* event) {
   * The application sends an HTTP POST request to the API: `/SampleWebService/GetImage`.
   * If the request is successful (**HTTP 200 OK**), the XML response is displayed on the UI next to the button.
 - **Or use in terminal:**
-  curl -X POST "http://<device_ip>/SampleWebService/GetImage"
+  curl --digest -u <user>:<password> -X POST "http://<device_ip>/SampleWebService/GetImage"
 
 - **Notes:**
   * `<device_ip>`: IP address of the device on which the application is running.
+  * `<user>`, `<password>`: a camera account. The endpoint requires HTTP Digest authentication.
 
 - **Expected response if the request succeeds (HTTP 200 OK):**
   The camera returns a valid XML message. 

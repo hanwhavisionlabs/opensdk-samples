@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Hanwha Vision Co., Ltd.
+// SPDX-License-Identifier: Apache-2.0
+
 #include "sample_component.h"
 
 #include <i_app_dispatcher.h>

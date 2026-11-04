@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 Hanwha Vision Co., Ltd. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <html lang="en">
 
 <head>
@@ -19,6 +21,10 @@
     <div id="status" />
 
     <script>
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+      }
+
         const sendData = () => {
             const paths = window.location.pathname.split('/');
             const app_id = paths[5];
@@ -39,7 +45,7 @@
                     let statusString = '';
                     let idx = 0;
                     data.status.forEach(state => {
-                        statusString += `<tr><td>${state.setting_type}</td><td>${state.latest_changed}</td><td>${state.channel}</td></tr>`
+                        statusString += `<tr><td>${escapeHtml(state.setting_type)}</td><td>${escapeHtml(state.latest_changed)}</td><td>${escapeHtml(state.channel)}</td></tr>`
                     });
                     status.innerHTML = `<table><tr><th scope="col">SettingType</td><th scope="col">LatestChanged</td><th scope="col">Channel</td></tr>${statusString}</table>`;
                 })

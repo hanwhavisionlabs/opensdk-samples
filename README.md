@@ -134,4 +134,5 @@ If you find a bug in a sample, please open an [issue](https://github.com/hanwhav
 
 Copyright (c) 2026 Hanwha Vision Co., Ltd.
 
-Licensed under the TODO: license name. See [LICENSE](LICENSE) for details.
+The samples in this repository are licensed under the [Apache License 2.0](LICENSE).
+The OpenSDK Docker image, SDK libraries, and tools are not part of this repository and are not covered by this license.

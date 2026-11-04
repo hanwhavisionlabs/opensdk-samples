@@ -1,10 +1,11 @@
+// Copyright (c) 2026 Hanwha Vision Co., Ltd.
+// SPDX-License-Identifier: Apache-2.0
+
 #include "webservice_component.h"
 
 #include "dispatcher_serialize.h"
 #include "i_app_dispatcher.h"
 #include "i_p_open_platform_manager.h"
-
-#define JPEG_FILE_PATH "/tmp/download/"
 
 WebServiceComponent::WebServiceComponent() : WebServiceComponent(_WebServiceComponent_Id, "WebServiceComponent") {}
 
@@ -16,14 +17,6 @@ bool WebServiceComponent::Initialize() {
   RegisterOpenAPIURI();
   std::string manifest_path = "../../config/app_manifest.json";
   ParseManifest(manifest_path, manifest_);
-
-  if (!std::filesystem::exists(JPEG_FILE_PATH)) {
-    if (std::filesystem::create_directory(JPEG_FILE_PATH)) {
-      std::cout << "Directory created successfully.\n";
-    } else {
-      std::cout << "Failed to create directory!\n";
-    }
-  }
   return Component::Initialize();
 }
 
@@ -113,9 +106,10 @@ std::string WebServiceComponent::MakeBase64TestString() {
 
 std::string WebServiceComponent::base64_encode(const char* in, size_t n) {
   std::string out;
-  int val = 0, valb = -6;
-  for (int i = 0; i < n; ++i) {
-    val = (val << 8) + in[i];
+  unsigned int val = 0;
+  int valb = -6;
+  for (size_t i = 0; i < n; ++i) {
+    val = (val << 8) + static_cast<unsigned char>(in[i]);
     valb += 8;
 
     while (valb >= 0) {
@@ -136,7 +130,7 @@ std::string WebServiceComponent::base64_encode(const char* in, size_t n) {
 
 void WebServiceComponent::RegisterOpenAPIURI() {
   auto* attach = new ("OpenAPIRegistrar") IAppDispatcher::OpenAPIRegistrar(String("/SampleWebService/GetImage"), GetInstanceName(), "POST");
-  attach->CustomSetting(true, netsvc::IHttpdService::AuthMethod::kNone);
+  attach->CustomSetting(true, netsvc::IHttpdService::AuthMethod::kDigest);
   SendNoReplyEvent("AppDispatcher", (int32_t)IAppDispatcher::EEventType::eRegisterCommand, 0, attach);
 }
 

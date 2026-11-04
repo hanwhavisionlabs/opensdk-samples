@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Hanwha Vision Co., Ltd.
+// SPDX-License-Identifier: Apache-2.0
+
 #pragma once
 #include <event_schedulable.h>
 #include <thread_safe_component.h>

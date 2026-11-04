@@ -39,10 +39,10 @@ compatibility alias for Home.
 * `PyWebServiceComponent` mirrors the `webservice_sample` HTTP contract. It
   registers the default `/SampleWebService/GetImage` endpoint,
   accepts additional clean absolute endpoint paths from the Webservice tab,
-  and returns the same SOAP/XML fields. Live raw video input, OpenCV/NV12
-  conversion, and JPEG production remain outside this integrated component;
-  when the existing `/tmp/download/image_service.jpeg` file is available, it
-  is Base64 encoded.
+  and returns the same SOAP/XML fields. Like `webservice_sample`, these
+  endpoints require HTTP Digest authentication. Live raw video input,
+  OpenCV/NV12 conversion, and JPEG production remain outside this integrated
+  component; the bundled `res/image.jpg` is Base64 encoded instead.
 * NPU and raw-video processing samples are not integrated.
 * SD-card functionality requires the `SDCard` permission, installation
   approval, and physical SD media. Formatting is a manual destructive test.

@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 Hanwha Vision Co., Ltd. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <html lang="en">
 
 <head>
@@ -65,6 +67,10 @@
   </form>
 
   <script>
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+    }
+
     const paths = window.location.pathname.split('/');
     const app_id = paths[5];
 
@@ -103,7 +109,7 @@
           const result = document.getElementById('sd_status_result');
           let statusString = '';
           data.slots.forEach(sd => {
-            statusString += `<tr><td>${sd.slot_index}</td><td>${sd.is_present}</td><td>${sd.is_mounted}</td></tr>`
+            statusString += `<tr><td>${escapeHtml(sd.slot_index)}</td><td>${escapeHtml(sd.is_present)}</td><td>${escapeHtml(sd.is_mounted)}</td></tr>`
           });
           console.log(statusString);
           result.innerHTML= `<table><tr><th scope="col">SlotIndex</td><th scope="col">IsPresent</td><th scope="col">IsMounted</td></tr>${statusString}</table>`;

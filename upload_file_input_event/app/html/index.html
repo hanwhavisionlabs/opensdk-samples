@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 Hanwha Vision Co., Ltd. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <html lang="en">
 
 <head>
@@ -19,6 +21,10 @@
     <div id="infos" />
 
     <script>
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+      }
+
         const sendData = () => {
             const paths = window.location.pathname.split('/');
             const app_id = paths[5];
@@ -38,7 +44,7 @@
                     const infos = document.getElementById('infos');
                     let infoString = '';
                     data.infos.forEach(i => {
-                        infoString += `<tr><td>${i.app}</td><td>${i.filename}</td></tr>`
+                        infoString += `<tr><td>${escapeHtml(i.app)}</td><td>${escapeHtml(i.filename)}</td></tr>`
                     });
                     infos.innerHTML = `<table><tr><th scope="col">AppName</td><th scope="col">FileName</td></tr>${infoString}</table>`;
                 })

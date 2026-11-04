@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Send the bundled JPEG through the native TCP server managed by Network Manager.
 import json
 import os

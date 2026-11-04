@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 Hanwha Vision Co., Ltd. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <html lang="en">
 
 <head>
@@ -61,6 +63,10 @@
   </span>
 
   <script>
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+    }
+
     const paths = window.location.pathname.split('/');
     const app_id = paths[5];
 
@@ -155,7 +161,7 @@
           let isEmpty = true;
           data.status.forEach(state => {
             if (state.schema && state.schema.trim() !== '') {
-              statusString += `<tr><td>${state.setting_type}</td><td>${state.schema}</td></tr>`
+              statusString += `<tr><td>${escapeHtml(state.setting_type)}</td><td>${escapeHtml(state.schema)}</td></tr>`
               isEmpty = false;
             }
           });

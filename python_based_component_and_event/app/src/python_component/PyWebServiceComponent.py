@@ -1,7 +1,9 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Python equivalent of webservice_sample's custom SOAP endpoint registration.
 import base64
 import json
-import os
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -10,7 +12,7 @@ from PyComponentModule import Component, HttpAuthMethod, OpenAppResponseType, Op
 
 DEFAULT_ENDPOINT = "/SampleWebService/GetImage"
 REGISTRATION_ENDPOINT = "/python/webservice/register"
-JPEG_PATH = Path("/tmp/download/image_service.jpeg")
+JPEG_PATH = Path("../res/image.jpg")
 RESERVED_ENDPOINTS = {"/opensdk", "/home/setup/opensdk/html"}
 RESERVED_PREFIXES = ("/opensdk/", "/home/setup/opensdk/html/")
 PROTECTED_ENDPOINTS = {
@@ -41,10 +43,6 @@ class PyWebServiceComponent(Component):
         return True
 
     def Initialize(self):
-        try:
-            os.makedirs(JPEG_PATH.parent, exist_ok=True)
-        except OSError:
-            pass
         return True
 
     def PostInitialize(self):
@@ -88,7 +86,7 @@ class PyWebServiceComponent(Component):
                 endpoint,
                 ["POST"],
                 custom=True,
-                auth_type=int(HttpAuthMethod.kNone),
+                auth_type=int(HttpAuthMethod.kDigest),
             )
         else:
             registered = self.RegisterOpenAPI(endpoint, ["POST"])

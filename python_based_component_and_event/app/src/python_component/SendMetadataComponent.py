@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hanwha Vision Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
 # Build native StreamMetadata requests without hiding unavailable runtime inputs.
 import json
 import time

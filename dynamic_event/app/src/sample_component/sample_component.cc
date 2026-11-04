@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Hanwha Vision Co., Ltd.
+// SPDX-License-Identifier: Apache-2.0
+
 // Cheack Add Schema(Json):  https://<CameraIP>/stw-cgi/eventstatus.cgi?msubmenu=eventstatusschema&action=view
 // Cheack Add Schema(xml):  https://<CameraIP>/stw-cgi/eventstatus.cgi?msubmenu=metadataschema&action=view
 #include "includes/sample_component.h"

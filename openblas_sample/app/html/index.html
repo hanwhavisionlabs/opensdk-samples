@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 Hanwha Vision Co., Ltd. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <html lang="en">
 
 <head>
@@ -167,6 +169,10 @@
 </body>
 
 <script>
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+  }
+
   document.getElementById('create-matrix').addEventListener('click', function(){
     createMatrixInputs();
   });
@@ -275,7 +281,7 @@
       for(let i = 0; i < data.rows; i++) {
         html += '<tr>';
         for(let j = 0; j < data.cols; j++) {
-          html += `<td>${data.result[i][j]}</td>`;
+          html += `<td>${escapeHtml(data.result[i][j])}</td>`;
         }
         html += '</tr>';
       }
@@ -289,7 +295,7 @@
     document.getElementById('loading-indicator').style.display = 'none';
 
     const responseElement = document.getElementById('response');
-    responseElement.innerHTML = `<p class="error">error : ${error}</p>`;
+    responseElement.innerHTML = `<p class="error">error : ${escapeHtml(error)}</p>`;
   }
 
   window.addEventListener('DOMContentLoaded', function() {
