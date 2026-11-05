@@ -67,51 +67,15 @@ image:image/result.png[Alt text]
 
 === Building Application
 
+The OpenSDK image provides OpenCV for each SoC (`/opt/opensdk/common/opensource/<SoC>/opencv-4.13.0`), and the application build uses it. No separate OpenCV build is needed.
+
+OpenCV and the libraries it bundles (libjpeg-turbo, libpng, OpenJPEG, and zlib) are linked statically into the application. When you distribute an application built from this sample, include their license notices with it. The OpenSDK image provides the notices in `/opt/opensdk/license/OpenSourceLicense.txt` (OpenCV, zlib) and `/opt/opensdk/common/opensource/<SoC>/opencv-4.13.0/share/licenses/opencv4/` (bundled libraries).
+
 [arabic]
-
-. Download and cross compile OpenCV source code.
-+
-....
-<Cross-compilation on an x86 system using a toolchain>
-opencv$ mkdir build
-opencv$ cd build
-opencv/build$ cmake -DCMAKE_TOOLCHAIN_FILE=../platforms/linux/aarch64-gnu.toolchain.cmake ..
-opencv/build$ make install
-....
-+
-....
-<Cross-compilation using the toolchain inside Docker (wn9)>
-#!/bin/bash
-set -e
-
-IMAGE=opensdk:26.03.27
-
-docker run -- rm -it \
-  -v $(pwd):/workspace \
-  -w /workspace \
-  $IMAGE \
-  bash -c "
-    set -e
-    cd opencv-4.12.0
-    mkdir -p build && cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../platforms/linux/aarch64-gnu.toolchain.cmake -DCMAKE_C_COMPILER=/opt/opensdk/toolchain/aarch64-wn9-linux-gnu/bin/aarch64-wn9-linux-gnu-gcc -DCMAKE_CXX_COMPILER=/opt/opensdk/toolchain/aarch64-wn9-linux-gnu/bin/aarch64-wn9-linux-gnu-g++ -DCMAKE_SYSROOT=/opt/opensdk/toolchain/aarch64-wn9-linux-gnu/aarch64-wn9-linux-gnu/sysroot -DBUILD_OPENJPEG=OFF -DBUILD_JPEG=ON -DWITH_IPP=OFF
-    make install -j16
-
-    echo 'Build Done'
-  "
-....
-
-. Copy libraries and headers. Let's say path of opencv on step 1 above is [opencv]
-+
-....
-display_image_opencv/app/libs$ cp -a [opencv]/build/install/lib/* .
-display_image_opencv/app/libs$ cd ../includes
-display_image_opencv/app/includes$ cp -a [opencv]/build/install/include/* .
-....
 . Build application.
 +
 ....
-$ APP_NAME=display_image_opencv SDK_VER=24.06.14(your SDK version) SOC=[wn9, cv5, orinnx8g_jp512] docker compose up
+$ APP_NAME=display_image_opencv SDK_VER=26.10.26(your SDK version) SOC=wn9_v100(your SoC) docker compose up
 $ docker compose down --remove-orphans
 ....
 . Check the build results in current directory. If successful, you will be able to find the cap file.

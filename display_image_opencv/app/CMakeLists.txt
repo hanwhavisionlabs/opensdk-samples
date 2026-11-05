@@ -26,6 +26,9 @@ set(COMMON ${SDK_PATH}/common)
 set(WISENET_PLATFORM_RELEASE_PATH ${COMMON}/platform/${SOC})
 set(WISENET_PRODUCT_RELEASE_PATH ${COMMON}/product/${SOC})
 set(APP_SUPPORT_PACKAGE ${COMMON}/AppSupportPackage/${SOC})
+set(OPENCV_BASE_DIR ${COMMON}/opensource/${SOC}/opencv-4.13.0)
+set(OpenCV_DIR ${OPENCV_BASE_DIR}/lib/cmake/opencv4)
+find_package(OpenCV REQUIRED CONFIG PATHS ${OpenCV_DIR} NO_DEFAULT_PATH COMPONENTS core imgproc imgcodecs)
 
 message("COMMON: ${COMMON}")
 message("WISENET_PLATFORM_RELEASE_PATH: ${WISENET_PLATFORM_RELEASE_PATH}")
@@ -34,6 +37,7 @@ message("WISENET_PRODUCT_RELEASE_PATH: ${WISENET_PRODUCT_RELEASE_PATH}")
 include_directories(${WISENET_PLATFORM_RELEASE_PATH}/includes)
 include_directories(${WISENET_PRODUCT_RELEASE_PATH}/includes)
 include_directories(includes)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 message("includes: ${CMAKE_CURRENT_SOURCE_DIR}/includes")
 
