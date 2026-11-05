@@ -29,7 +29,7 @@ docker load -i opensdk-<version>.tar.gz
 
 Check the image with `docker images opensdk`.
 
-Each release has two tags for the same image: `<version>` (for example, `26.10.26`) and `<version>_<soc>`, which names the SoC family the image supports (for example, `26.10.26_wn9`). Use the `<version>` tag as `SDK_VER` when you build a sample. There is no `latest` tag.
+Each release has two tags for the same image: `<version>` (for example, `26.10.26`) and `<version>_<soc>`, which names the SoC family the image supports (for example, `26.10.26_wn9`). Use the `<version>` tag as `SDK_VER` when you build a sample.
 
 ## Samples
 
