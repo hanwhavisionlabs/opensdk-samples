@@ -84,7 +84,7 @@ Index   Status
 . Build application.
 +
 ....
-$ APP_NAME=sdcard_input_event SDK_VER=24.06.14(your SDK version) SOC=cv5 docker compose up
+$ APP_NAME=sdcard_input_event SDK_VER=24.06.14(your SDK version) SOC=[cv5, wn9] docker compose up
 $ docker compose down --remove-orphans
 ....
 . Check the build results in current directory. If successful, you will be able to find the cap file.
