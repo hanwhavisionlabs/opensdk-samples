@@ -51,7 +51,7 @@ Index EventType           MessageTime                   State Channel
 . Build application.
 +
 ....
-$ APP_NAME=analytics_input_event SDK_VER=24.06.14(your SDK version) SOC=[cv5, nvidia_jp512] docker compose up
+$ APP_NAME=analytics_input_event SDK_VER=24.06.14(your SDK version) SOC=cv5 docker compose up
 $ docker compose down --remove-orphans
 ....
 . Check the build results in current directory. If successful, you will be able to find the cap file.
