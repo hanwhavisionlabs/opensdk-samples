@@ -169,7 +169,7 @@ size_t output_tensor_count = network->GetOutputTensorCount();
 . Build application.
 +
 ....
-$ APP_NAME=run_neural_network SDK_VER=24.06.14(your SDK version) SOC=[cv5, orinnx8g_jp512] docker compose up
+$ APP_NAME=run_neural_network SDK_VER=24.06.14(your SDK version) SOC=[cv5, nvidia_jp512] docker compose up
 $ docker compose down --remove-orphans
 ....
 . Check the build results in current directory. If successful, you will be able to find the cap file.

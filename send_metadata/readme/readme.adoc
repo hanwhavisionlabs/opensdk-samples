@@ -360,7 +360,7 @@ as shown below is sent to RTP Meta Track.
 . Build application.
 +
 ....
-$ APP_NAME=send_metadata SDK_VER=24.06.14(your SDK version) SOC=[cv5, orinnx8g_jp512] docker compose up
+$ APP_NAME=send_metadata SDK_VER=24.06.14(your SDK version) SOC=[cv5, nvidia_jp512] docker compose up
 $ docker compose down --remove-orphans
 ....
 . Check the build results in current directory. If successful, you will be able to find the cap file.

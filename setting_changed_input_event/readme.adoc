@@ -78,7 +78,7 @@ WiseStream        2023-12-08T05:26:27 0
 . Build application.
 +
 ....
-$ APP_NAME=setting_changed_input_event SDK_VER=24.06.14(your SDK version) SOC=[cv5, orinnx8g_jp512] docker compose up
+$ APP_NAME=setting_changed_input_event SDK_VER=24.06.14(your SDK version) SOC=[cv5, nvidia_jp512] docker compose up
 $ docker compose down --remove-orphans
 ....
 . Check the build results in current directory. If successful, you will be able to find the cap file.
