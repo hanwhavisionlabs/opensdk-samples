@@ -14,14 +14,21 @@ The samples cover camera events, media and metadata handling, SUNAPI requests, N
 
 The samples build with `opensdk:<version>`. Get the image in either of these ways.
 
-**From Docker Hub.** The image is published as [hanwhavisionlabs/opensdk](https://hub.docker.com/r/hanwhavisionlabs/opensdk). Pull the version you need and tag it with the name the samples use:
+| SoC | Source | Image |
+|---|---|---|
+| WN9 | [Docker Hub](https://hub.docker.com/r/hanwhavisionlabs/opensdk) | `hanwhavisionlabs/opensdk:<version>` |
+| Other SoCs | [STEP site](https://step.hanwhavision.com/en/api-sdk/downloads) | `opensdk-<version>.tar.gz` (all SoCs) |
+
+> **Note:** The image on Docker Hub currently supports WN9 only. For other SoCs, use the `.tar.gz` file until an image for all SoCs is published on Docker Hub.
+
+**From Docker Hub (WN9).** Check the available versions on the [Docker Hub tags page](https://hub.docker.com/r/hanwhavisionlabs/opensdk/tags). Pull the image and tag it with the name the samples use:
 
 ```bash
 docker pull hanwhavisionlabs/opensdk:<version>
 docker tag hanwhavisionlabs/opensdk:<version> opensdk:<version>
 ```
 
-**From the distributed image file.** Loading `opensdk-<version>.tar.gz` creates `opensdk:<version>` directly:
+**From the .tar.gz file (all SoCs).** Loading `opensdk-<version>.tar.gz` creates `opensdk:<version>` directly:
 
 ```bash
 docker load -i opensdk-<version>.tar.gz
